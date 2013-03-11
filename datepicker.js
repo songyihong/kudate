@@ -1,3 +1,4 @@
+
 define(function(require, exports, moudle) {
 
 	var jQuery = require('jquery');
