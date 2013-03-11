@@ -1,4 +1,7 @@
-
+/**
+ *日期选择组件
+ *该组件依赖于seajs(http://seajs.org)
+ */
 define(function(require, exports, moudle) {
 
 	var jQuery = require('jquery');
