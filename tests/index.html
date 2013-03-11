@@ -5,12 +5,20 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>日期选择组件</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../lib/sea.js" data-config="../config" id="seajsnode">
+        </script>
     </head>
     <body>
         <div>
             <input type="text" value="" class="datepicker" id="datepicker"/>
         </div>
+        <script type="text/javascript">
+            seajs.use(['jquery','../src/datepicker'], function($,datepicker) {
+                seajs.log("hello");
+                console.log($("#datepicker"));
+            });
+        </script>
     </body>
 </html>
