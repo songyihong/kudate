@@ -5,8 +5,12 @@ kudate
 如何使用
 -----------
 new  Calendar\(\[config\]\);//实例化日期  
-日期格式规定：**YYYY-MM-DD**或__YYYY\\MM\\DD__  
-双日期格式：**YYYY-MM-DD到YYYY-MM-DD** 或  __YYYY\\MM\\DD到YYYY\\MM\\DD__  
+日期格式规定：
+**YYYY-MM-DD** 或 
+__YYYY\\MM\\DD__  
+双日期格式：
+**YYYY-MM-DD到YYYY-MM-DD** 或 
+__YYYY\\MM\\DD到YYYY\\MM\\DD__  
 config:参数配置  
 \{  
 > **isPopup:** true/false,//是否弹出显示日期  
