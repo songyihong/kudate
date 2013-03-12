@@ -53,7 +53,7 @@ define(function(require, exports, moudle) {
             return this.formatStrDate(sDate).replace(/-|\//g, "")
         },  
         /**
-         * 获取指定日期（yyyy-mm-dd）的前1~3天/后1~3天数据
+         * 获取指定日期（yyyy-mm-dd）的前1~3天/后1~3天数据，dateName的前三天，后三天
          * @name _CAL#getThreeDays
          * @param {string} dateName 日期名字
          * @param {string} sDate    日期字符串（yyyy-mm-dd）
@@ -262,7 +262,7 @@ define(function(require, exports, moudle) {
             return new Date(dates[0], month, day);
         },
         /**
-         * 返回根据今天推算前ints天(后ints)的时间  ,ints >0 向后 天,ints < 0 向前ints天
+         * 返回根据今天推算前ints天(后ints)的时间  ,ints >0 向后 天,ints < 0 向前ints天，可用在向前或向后推多少天
          */
         getDate : function(today, days) {
             if(today && days && typeof days === 'number') {
@@ -289,7 +289,7 @@ define(function(require, exports, moudle) {
             return today;
         },
         
-        //根据sDate 来获得相同时间段的时间 , 来设置第二个日历的时间 
+        //根据sDate 来获得相同时间段的时间 , 来设置第二个日历的时间 ，可用在同时向前或向后多少天
         getPrevSameTime : function (sDate, sminDate, smaxDate){
             var st = sDate.split('至')[0],  et = sDate.split('至')[1];
             
@@ -443,12 +443,12 @@ define(function(require, exports, moudle) {
         "yuandan":"\u5143\u65e6",
         "chuxi":"\u9664\u5915",
         "chunjie":"\u6625\u8282",
-        "yuanxiao":"\u5143\u5bb5\u8282",
+        "yuanxiao":"\u5143\u5bb5",
         "qingming":"\u6e05\u660e",
-        "wuyi":"\u52b3\u52a8\u8282",
-        "duanwu":"\u7aef\u5348\u8282",
-        "zhongqiu":"\u4e2d\u79cb\u8282",
-        "guoqing":"\u56fd\u5e86\u8282"
+        "wuyi":"\u52b3\u52a8",
+        "duanwu":"\u7aef\u5348",
+        "zhongqiu":"\u4e2d\u79cb",
+        "guoqing":"\u56fd\u5e86"
     };
     /**
      * 2012——2020年节假日数据
