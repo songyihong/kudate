@@ -43,4 +43,5 @@ config:参数配置
 > **cancel** function\(\)\{\},//点击取消时行为  
 > **today** today,//今天日期，默认为当前日期  
 > **rang:** \{*minDate:* null,_maxDate:_ null\},//日历最小日期，最大日期，默认为不限制  
+
 \}
