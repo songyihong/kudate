@@ -2,7 +2,8 @@ kudate
 ======
 一个日期组件，直接选定单日期或多日期
 
-1.如何使用
+<a name="a1"></a>
+如何使用
 -----------
 new  Calendar\(\[config\]\);//实例化日期  
 日期格式规定：
@@ -44,4 +45,20 @@ config:参数配置
 > **today** today,//今天日期，默认为当前日期  
 > **rang:** \{*minDate:* null,_maxDate:_ null\},//日历最小日期，最大日期，默认为不限制  
 
-\}
+\}  
+<a name="a2"></a>
+获取一些特定的日期
+-----------
+var assigndate=new DateCommon(today,sminDate);//实例化获取特殊日期，参数为今天日期\(YYYY-MM-DD\)、最小日期\(YYYY-MM-DD\)  
+可以获得如下一些日期信息
+**assigndate.getWeekDay** 今天是一周当中第几天  
+**assigndate.getMonthDay** 今天是一个月当中第几天  
+**assigndate.today_date** 返回今天日期，YYYY-MM-DD到YYYY-MM-DD，以下返回日期格式都是这种格式  
+**assigndate.yesterday** 返回昨天日期  
+**assigndate.last7_date** 返回最近7天  
+**assigndate.last30_date** 返回最近30天  
+**assigndate.week_date** 返回本周日期  
+**assigndate.month_date** 返回本月日期  
+**assigndate.lastweek_date** 返回上周日期  
+**assigndate.lastmonth_date** 返回上月日期  
+**assigndate.prev_date(sDate)** 参数sdate为\(YYYY-MM-DD到YYYY-MM-DD\)，返回在sminDate到today之间由sDate向前推或向后推跟sDate同天数的日期  
