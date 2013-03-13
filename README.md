@@ -21,6 +21,7 @@ config:参数配置
 > **isCloseBtn:** false/true,//是否显示关闭按钮，默认不显示  
 > **isHoliday:** false/true,//是否显示特殊节假日，默认不显示  
 > **isHolidayTips:** false/true,//是否显示特殊节假日前后三天，默认不显示  
+> **isReadonly:** false/true,//设置日历输入框是否只读，默认false
 > **isDateInfo:** false/true,//是否显示日期信息  
 > **DateInfoClass:** 'data-info',//日期信息classname，默认为data-info  
 > **isMessage:** false/true,//日历是否包含提示信息  
@@ -42,5 +43,4 @@ config:参数配置
 > **cancel** function\(\)\{\},//点击取消时行为  
 > **today** today,//今天日期，默认为当前日期  
 > **rang:** \{*minDate:* null,_maxDate:_ null\},//日历最小日期，最大日期，默认为不限制  
-
 \}
