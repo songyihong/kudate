@@ -22,7 +22,7 @@ config:参数配置
 > **isCloseBtn:** false/true,//是否显示关闭按钮，默认不显示  
 > **isHoliday:** false/true,//是否显示特殊节假日，默认不显示  
 > **isHolidayTips:** false/true,//是否显示特殊节假日前后三天，默认不显示  
-> **isReadonly:** false/true,//设置日历输入框是否只读，默认false
+> **isReadonly:** false/true,//设置日历输入框是否只读，默认false  
 > **isDateInfo:** false/true,//是否显示日期信息  
 > **DateInfoClass:** 'data-info',//日期信息classname，默认为data-info  
 > **isMessage:** false/true,//日历是否包含提示信息  
@@ -35,7 +35,9 @@ config:参数配置
 > **endDate:** null,//日历结束日期，配合上面5个参数实现淘宝旅行网日期选择效果  
 > **count:** 1,//日历的个数，默认为1个  
 > **monthStep:** count,//上下个月的切换步长，默认为count值，即整块切换  
-> **revise:** \{*top:*0,_left:_0\},//日历部件位置微调  
+> **revise:** \{
+*top:*0,
+*left:*0\},//日历部件位置微调  
 > **date:** today,//突出渲染的日期，默认为今天  
 > **selectDate:** null,//设置默认选择的日期范围  
 > **html:** '',//日历右边html，默认空  
@@ -43,7 +45,9 @@ config:参数配置
 > **submit:** function\(\)\{\},//点击提交时行为  
 > **cancel** function\(\)\{\},//点击取消时行为  
 > **today** today,//今天日期，默认为当前日期  
-> **rang:** \{*minDate:* null,_maxDate:_ null\},//日历最小日期，最大日期，默认为不限制  
+> **rang:** \{
+*minDate:* null,
+*maxDate:* null\},//日历最小日期，最大日期，默认为不限制  
 
 \}  
 <a name="a2"></a>

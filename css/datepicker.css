@@ -1,0 +1,60 @@
+/* 
+   日历组件样式
+*/
+body, dl, dd, h1, h2, h3, h4, h5, h6, p, form,li{margin:0;}
+input{padding:0;}
+ul,ol{list-style: none;margin:0; padding:0;}
+img{border:0;-ms-interpolation-mode: bicubic; }
+html {font-size: 100%;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;}
+body{font-size:12px;font-family: Arial,"SimSun";}
+.example{
+    width: 960px;
+    margin: 0 auto;
+}
+.datepickerinput{
+    border: solid 1px #ccc;
+    font-size: 12px;
+    color: #333;
+    width: 170px;
+    padding: 4px 5px;
+    height: 15px;
+    line-height: 15px;
+    vertical-align: baseline;
+    outline: none;
+    background: url("../images/calendar.gif") no-repeat right center;
+}
+.datepicker_container{
+    border: solid 1px #666666;
+    padding: 10px 5px;
+}
+.cal-box{
+    zoom: 1;
+}
+.cal-box:after{
+    visibility:hidden;
+    display:block;
+    font-size:0;
+    content:" ";
+    clear:both;
+    height:0;
+}
+.cal-container{
+    float: left;
+    margin: 0 5px;
+}
+
+.cal-container dt{
+    float: left;
+}
+.cal-container .date{
+    float: none;
+    display: block;
+    clear: right;
+    background: #676767;
+    line-height: 22px;
+    color: #fff;
+    text-align: center;
+}
+.cal-container dt a{
+    font-family: Arial,"PMingLiU";
+}

@@ -90,6 +90,7 @@ define(function(require, exports, moudle) {
          * @return object {left: 元素左端距文档左侧位置, top: 元素左端距文档左侧位置, right: 元素右端距文档左侧位置, bottom: 元素底端距文档上方位置}
          */ 
         getPos: function(element) {
+            seajs.log(element);
             var iScrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             iScrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft,
             iPos = element.getBoundingClientRect();     
@@ -455,7 +456,7 @@ define(function(require, exports, moudle) {
     "<dt>\u4e09</dt>",
     "<dt>\u56db</dt>",
     "<dt>\u4e94</dt>",
-    "<dt style='width:27px;'><strong>\u516d</string></dt>",
+    "<dt style='width:27px;'><strong>\u516d</strong></dt>",
     "<dd></dd>",
     "</dl>",
     "</div>"
@@ -547,7 +548,7 @@ define(function(require, exports, moudle) {
              * @name Calendar.id
              * @type String
              */
-            this.id = this.isPopup ? "C_" + (+new Date()) : config.id.replace(/^#/, "") || "C_" + (+new Date());
+            this.id = this.isPopup ? "C_" + (+new Date()) : (config.id && config.id.replace(/^#/, "")) || "C_" + (+new Date());
             /**
              * 日历容器
              * @name Calendar.container
@@ -751,21 +752,26 @@ define(function(require, exports, moudle) {
          * @private
          */
         _create: function() {
+            seajs.log("创建日历结构");
             var aTmp = [],
             i = 0,
             oIframe = null,
             oDiv = document.createElement("div"),
             oMsg = document.createElement("div");
-            //显示上月按钮    
-            this.isPrevBtn  && aTmp.push("<span class=\"cal-prev\">prev</span>");
-            //显示下月按钮
-            this.isNextBtn  && aTmp.push("<span class=\"cal-next\">next</span>");
             //显示关闭按钮
             this.isCloseBtn && aTmp.push("<span class=\"cal-close\">close</span>");
             
             //右边的快捷方式
             aTmp.push("<div class=\"right_quickButton\">" + this.html + "</div>");
             
+            aTmp.push("<div class=\"cal-box\">");
+             //显示上月按钮    
+            this.isPrevBtn  && aTmp.push("<span class=\"cal-prev\">prev</span>");
+            //显示下月按钮
+            this.isNextBtn  && aTmp.push("<span class=\"cal-next\">next</span>");
+            //生成日历结构
+            for(i = this.count; i--;) aTmp = aTmp.concat(_template);
+            aTmp.push("</div>");
             
             //添加 确定 关闭 按钮
             aTmp.push(
@@ -773,19 +779,13 @@ define(function(require, exports, moudle) {
                 /*+	"<p class=\"fleft\">统计开通日期：" + this.startDate + "</p>"
             		+	"<p>"*/
                 +		"<a class=\"button-submit submitA a_0 \">确定</a>"
-                +		"<a class=\"button-close blue12\">&nbsp;&nbsp;&nbsp;&nbsp;关闭</a>"
+                +		"<a class=\"button-close blue12\">关闭</a>"
                 //+	"</p>"
-                +"</div>");
-                
-            
-            
-            //生成日历结构
-            for(i = this.count; i--;) aTmp = aTmp.concat(_template);        
-                
+                +"</div>");   
             //配置日历容器
             oDiv.className = "calendar";
             oDiv.innerHTML = aTmp.join("");
-            if(!this.isPrevBtn && !this.isNextBtn && !this.isCloseBtn) oDiv.style.paddingLeft = oDiv.style.paddingRight = "5px";
+            //if(!this.isPrevBtn && !this.isNextBtn && !this.isCloseBtn) oDiv.style.paddingLeft = oDiv.style.paddingRight = "5px";
             this.container.id = this.id;
             this.container.className = 'datepicker_container';
             this.container.appendChild(oDiv);       
@@ -1280,6 +1280,7 @@ define(function(require, exports, moudle) {
             sDate = sDate || this.triggerNode.value;
             this.oDateInfo.innerHTML = this.rDate.test(sDate) ? (this.triggerNode.value = sDate, this.render(sDate), this.getDateInfo(sDate)[this.isHoliday ? "holiday" : "week"]) : ""
          */
+            seajs.log(sDate);
             if(!this.triggerNode){
                 return ;
             }
