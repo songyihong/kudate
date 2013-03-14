@@ -1,18 +1,15 @@
-kudate
-======
+#kudate
 一个日期组件，直接选定单日期或多日期
 
-<a name="a1"></a>
-如何使用
------------
-new  Calendar\(\[config\]\);//实例化日期  
+##如何使用
+var calendar=new  Calendar\(\[config\]\);//实例化日期  
 日期格式规定：
 **YYYY-MM-DD** 或 
 __YYYY\\MM\\DD__  
 双日期格式：
 **YYYY-MM-DD到YYYY-MM-DD** 或 
 __YYYY\\MM\\DD到YYYY\\MM\\DD__  
-config:参数配置  
+###1、config:参数配置  
 \{  
 > **isPopup:** true/false,//是否弹出显示日期  
 > **id:** id,//日历容器ID，为空则自动生成ID  
@@ -50,7 +47,17 @@ config:参数配置
 *maxDate:* null\},//日历最小日期，最大日期，默认为不限制  
 
 \}  
-<a name="a2"></a>
+###2、自定义事件
+自定义事件主要灵活用在处理日期时与外部的交互  
+目前支持自定义事件类型：  
+**show**:日期显示事件  
+**hide**:日期隐藏事件  
+**dateClick**:可点击日期事件  
+**nextMonthClick**:下个月事件  
+**prevMonthClick**:上个月事件  
+添加自定义事件  
+**calendar.on("元素",“事件类型”,“事件处理函数”)**
+
 获取一些特定的日期
 -----------
 var assigndate=new DateCommon(today,sminDate);//实例化获取特殊日期，参数为今天日期\(YYYY-MM-DD\)、最小日期\(YYYY-MM-DD\)  

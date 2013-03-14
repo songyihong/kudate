@@ -90,7 +90,6 @@ define(function(require, exports, moudle) {
          * @return object {left: 元素左端距文档左侧位置, top: 元素左端距文档左侧位置, right: 元素右端距文档左侧位置, bottom: 元素底端距文档上方位置}
          */ 
         getPos: function(element) {
-            seajs.log(element);
             var iScrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             iScrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft,
             iPos = element.getBoundingClientRect();     
@@ -450,13 +449,13 @@ define(function(require, exports, moudle) {
     "<div class=\"cal-container\">",
     "<dl>",
     "<dt class=\"date\"></dt>",
-    "<dt><strong>\u65e5</strong></dt>",
+    "<dt class=\"cal-sunday\"><strong>\u65e5</strong></dt>",
     "<dt>\u4e00</dt>",
     "<dt>\u4e8c</dt>",
     "<dt>\u4e09</dt>",
     "<dt>\u56db</dt>",
     "<dt>\u4e94</dt>",
-    "<dt style='width:27px;'><strong>\u516d</strong></dt>",
+    "<dt  class=\"cal-saturday\"><strong>\u516d</strong></dt>",
     "<dd></dd>",
     "</dl>",
     "</div>"
@@ -499,7 +498,7 @@ define(function(require, exports, moudle) {
     };
     //生成节假日提示信息地图
     for(var p in _holidays) {
-        if(p == "today") continue;
+        if(p == "today")  continue;
         for(var i = 0; i < _holidays[p].length; i++) {
             _CAL.addObject(_dateMap, _CAL.getThreeDays(_holidays[p][i], _dateName[p]));
         }   
@@ -739,9 +738,7 @@ define(function(require, exports, moudle) {
                 maxDate:null
             };          
             //创建日历
-            this._create();             
-            //初次渲染
-            this.render();
+            this._create();   
             //添加事件
             this._addEvent()
         },
@@ -752,7 +749,6 @@ define(function(require, exports, moudle) {
          * @private
          */
         _create: function() {
-            seajs.log("创建日历结构");
             var aTmp = [],
             i = 0,
             oIframe = null,
@@ -764,13 +760,15 @@ define(function(require, exports, moudle) {
             //右边的快捷方式
             aTmp.push("<div class=\"right_quickButton\">" + this.html + "</div>");
             
+            aTmp.push("<div class=\"cal-outerbox\">");
             aTmp.push("<div class=\"cal-box\">");
-             //显示上月按钮    
+            //显示上月按钮    
             this.isPrevBtn  && aTmp.push("<span class=\"cal-prev\">prev</span>");
             //显示下月按钮
             this.isNextBtn  && aTmp.push("<span class=\"cal-next\">next</span>");
             //生成日历结构
             for(i = this.count; i--;) aTmp = aTmp.concat(_template);
+            aTmp.push("</div>");
             aTmp.push("</div>");
             
             //添加 确定 关闭 按钮
@@ -820,6 +818,9 @@ define(function(require, exports, moudle) {
             //如果是弹出式日历则先将其隐藏, 并设置绝对定位
             this.isPopup && (this.hide().container.style.position = "absolute");
             
+            //初次渲染
+            this.render();
+            
             //触发元素为输入框时的相关设置
             if(this.triggerNode.tagName.toUpperCase() === "INPUT") {
                 //如果设置了只读, 修改触发元素的readonly
@@ -839,7 +840,8 @@ define(function(require, exports, moudle) {
                     this.triggerNodeParent.appendChild(this.oDateInfo)              
                 }
                 //如果输入框有值
-                this.triggerNode.value != "" && this.isHolidayTips && this.setDateInfo();
+                //this.triggerNode.value != "" && this.isHolidayTips && this.setDateInfo();
+                this.triggerNode.value != "" && this.setDateInfo(this.triggerNode.value);
             }
         },
         /**
@@ -954,8 +956,9 @@ define(function(require, exports, moudle) {
                             //节假日处理
                             if(this.isHoliday) {
                                 for(var className in _dateName) {
-                                    if(oA.className == "disabled") continue;
+                                    //if(oA.className == "disabled") continue;
                                     this._isHoliday(oA, className)
+                                // this._isHoliday(oA)
                                 }
                             }
                             
@@ -996,9 +999,21 @@ define(function(require, exports, moudle) {
          * @private      
          */
         _isHoliday: function(obj, className) {
+            //            if(this.isHolidayTips){
+            //                if(_dataMap[obj["data-date"]]){
+            //                    obj.className += ' '+className;
+            //                    obj.innerHTML = "<span>"+ _dataMap[obj["data-date"]] +"</span>"
+            //                }
+            //            }else{
+            //                if(_holidayMap[obj["data-date"]]){
+            //                    obj.className += ' '+className;
+            //                    obj.innerHTML = "<span>"+ _holidayMap[obj["data-date"]] +"</span>"
+            //                }
+            //            }
             if(new RegExp(obj["data-date"]).test(_holidays[className].join())) {
-                obj.className = className;
-                obj.innerHTML = "<span>"+ obj.innerHTML.replace(/<[^>]+>/,"") +"</span>"
+                obj.className += ' '+className;
+                //obj.innerHTML = "<span>"+ obj.innerHTML.replace(/<[^>]+>/,"") +"</span>"
+                obj.innerHTML = "<span>"+ _dateName[className] +"</span>"
             }
         },
         /**
@@ -1008,14 +1023,22 @@ define(function(require, exports, moudle) {
          * @private      
          */
         _setPos: function() {
-            var t, l, maxT, ie = /msie\s(\d+\.\d+)/i.test(navigator.userAgent) ? RegExp.$1: undefined;
-            t = _CAL.getPos(this.triggerNode).bottom + this.revise.top - (ie < 8 ? 2 : 0);
-            l = _CAL.getPos(this.triggerNode).left + this.revise.left - (ie < 8 ? 2 : 0);
-            maxT = t - 211 - this.triggerNode.offsetHeight - this.revise.top * 2;
-            if(t > document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop) - 211) t = maxT < 0 ? t : maxT;
-            
-            this.container.style.top  = t + "px";
-            this.container.style.left = l - 362 + "px"
+            //            var t, l, maxT, ie = /msie\s(\d+\.\d+)/i.test(navigator.userAgent) ? RegExp.$1: undefined;
+            //            t = _CAL.getPos(this.triggerNode).bottom + this.revise.top - (ie < 8 ? 2 : 0);
+            //            l = _CAL.getPos(this.triggerNode).left + this.revise.left - (ie < 8 ? 2 : 0);
+            //            maxT = t - 211 - this.triggerNode.offsetHeight - this.revise.top * 2;
+            //            if(t > document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop) - 211) t = maxT < 0 ? t : maxT;
+            //            
+            //            this.container.style.top  = t + "px";
+            //            this.container.style.left = l - 362 + "px"
+            var caloffset=jQuery(this.triggerNode).offset();
+            var height=jQuery(this.triggerNode).outerHeight(true);
+            var box=jQuery(".right_quickButton").outerWidth(true);
+            var left=caloffset.left;
+            var top=caloffset.top+height;
+            this.container.style.top  = top + "px";
+            this.container.style.left = left + "px";
+            this.container.style.width = box + 232*(this.count-0)+1+"px";
         },
         /**
          * 添加事件
@@ -1034,6 +1057,7 @@ define(function(require, exports, moudle) {
                 that.closeTimer && clearTimeout(that.closeTimer);
                 e = e || event;
                 var oTarget = e.target || e.srcElement;
+                console.log(e);
                 
                 if(jQuery(oTarget).hasClass('submitA')){
                     if(jQuery(oTarget).hasClass('button-submit')){
@@ -1133,15 +1157,15 @@ define(function(require, exports, moudle) {
                         break;
                     
                 }
-                
+                console.log(oTarget.className);
                 if(oTarget.className){
-                    jQuery('a').removeClass('cal-selected').parent().removeClass('calSelected');
-                    jQuery('a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');
+                    jQuery('a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
+                    jQuery('a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
                 }
                 
                 
                 oTarget.parentNode.tagName.toUpperCase() === "A" && (oTarget = oTarget.parentNode);         
-                if(oTarget.tagName.toUpperCase() === "A" && oTarget.className != "disabled" && $(oTarget).attr('info') === 'datepicker') {
+                if(oTarget.tagName.toUpperCase() === "A" && oTarget.className != "disabled" && $(oTarget).attr('info') === 'datepicker') {//点击选中有效的日期
                     that.run("dateClick", oTarget);
                 // if(that.triggerNode.tagName.toUpperCase() === "INPUT") {                 
                 // that.triggerNode.value = oTarget["data-date"];
@@ -1229,7 +1253,7 @@ define(function(require, exports, moudle) {
         nextMonth: function() {     
             // editor kong
             var date = new Date(this.year, this.month + (this.monthStep - 1), 1);
-            if(date.getTime() < _CAL.getTimeByStringDate(this.endDate)){
+            if((this.endDate && date.getTime() < _CAL.getTimeByStringDate(this.endDate)) || !this.endDate){
                 this.render(new Date(this.year, this.month + (this.monthStep - 1), 1));
                 this.run("nextMonthClick")
             }
@@ -1242,7 +1266,7 @@ define(function(require, exports, moudle) {
         prevMonth: function() {
             // editor kong
             var date = new Date(this.year, this.month - (this.monthStep), 1);
-            if(date.getTime() > _CAL.getTimeByStringDate(this.startDate)){
+            if((this.startDate && date.getTime() > _CAL.getTimeByStringDate(this.startDate)) || !this.startDate){
                 this.render(new Date(this.year, this.month - (this.monthStep + 1), 1));
                 this.run("prevMonthClick");
             }       
@@ -1280,7 +1304,6 @@ define(function(require, exports, moudle) {
             sDate = sDate || this.triggerNode.value;
             this.oDateInfo.innerHTML = this.rDate.test(sDate) ? (this.triggerNode.value = sDate, this.render(sDate), this.getDateInfo(sDate)[this.isHoliday ? "holiday" : "week"]) : ""
          */
-            seajs.log(sDate);
             if(!this.triggerNode){
                 return ;
             }
@@ -1300,7 +1323,7 @@ define(function(require, exports, moudle) {
                     this.render(et);            
                 }
             }else{
-                log('日期格式不正确');
+                seajs.log('日期格式不正确');
             }
             
         },
@@ -1637,8 +1660,7 @@ define(function(require, exports, moudle) {
             return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday);
         };  
     }
-
-
+    
     exports._CAL = _CAL;
     exports.Calendar = Calendar;//输出日历对象
     exports.DateCommon = DateCommon;//输出特定的日期

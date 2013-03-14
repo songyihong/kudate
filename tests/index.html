@@ -3,7 +3,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>日期选择组件</title>
-        <link href="../css/datepicker.css" type="text/css" rel="stylesheet"/>
         <script src="../lib/sea.js" data-config="../config" id="seajsnode"></script>
     </head>
     <body>
@@ -14,7 +13,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            seajs.use(['jquery','../src/datepicker'], function($,datepicker) {
+            seajs.use(['jquery','../src/datepicker','../css/datepicker.css'], function($,datepicker) {
                 seajs.log(datepicker);
                 var calendar=new datepicker.Calendar({
                     id : '#datepickerInput',
@@ -25,11 +24,15 @@
                     count : 2,
                     monthStep : 1,
                     isHoliday : 1,
-                    isHolidayTips : 0,
+                    isHolidayTips : 1,
                     isReadonly : 0,
-                    isDateInfo : !0
+                    isDateInfo : !0,
+                    isSelect:0,
+                    //endDate:'2013-03-14',
+                    //startDate:'2012-12-11',
+                    html:'<ul class="right-select"> <li class="calSelected"><a class="today_date cal-selected">今日</a></li> <li><a class="yesterday_date">昨日</a></li> <li><a class="last7_date">最近7日</a></li> <li><a class="last30_date">最近30日</a></li> <li><a class="week_date">本周</a></li> <li><a class="lastweek_date">上周</a></li> <li><a class="month_date">本月</a></li> <li><a class="lastmonth_date">上月</a></li></ul>'
                 });
-                calendar.show();
+                //calendar.show();
                 //seajs.log(calender);
             });
         </script>
