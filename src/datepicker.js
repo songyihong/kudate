@@ -295,7 +295,8 @@ define(function(require, exports, moudle) {
         },
         
         //根据sDate 来获得相同时间段的时间 , 来设置第二个日历的时间 ，可用在同时向前或向后多少天
-        getPrevSameTime : function (sDate, sminDate, smaxDate){
+        getPrevSameTime : function (sDate, sminDate, smaxDate, returnori){
+            var ori=returnori==undefined ? true : returnori;//但不可向前或向后时是否返回原值，默认返回原值
             var st = sDate.split('至')[0],  et = sDate.split('至')[1];
             
             //开始到 最小时间的间隔
@@ -322,7 +323,7 @@ define(function(require, exports, moudle) {
                 var _st = _CAL.getDate(_et, intervals0);
                 return _st + '至' + _et;
             }else{
-                return sDate;
+                return ori ? sDate : null;
             }        
             
         },
@@ -671,6 +672,7 @@ define(function(require, exports, moudle) {
              * @type Object
              */
             this.triggerNode = _CAL.$("#" + config.id.replace(/^#/, ""));
+            console.log(this.triggerNode);
             
             this.idName = config.id.replace(/^#/, "");
             /**
@@ -1555,60 +1557,75 @@ define(function(require, exports, moudle) {
     
     //today 格式: 2012-02-30
     function DateCommon(today, sminDate){
+        var weekstart=arguments[2]!=undefined ? arguments[2] : 1;//每周周一或周日作为第一天，默认每周从周一开始
+        var startmindate=arguments[3]!=undefined ? arguments[3] : true;//当天数不满足要求时，是返回null,还是从最小日期开始，默认从最小日期开始
+        var week_date,day8,day1;
         this.oToday = _CAL.getDateByStringDate(today);
         this.sToday = today;
         this.sminDate = sminDate;
-    
         
-        //一周的第几天
-        this.getWeekDay = this.oToday.getUTCDay() + 1;
+        var dayInweek= this.oToday.getUTCDay()
+        if(weekstart === 1){
+            if(dayInweek==0) this.getWeekDay=7;
+            else this.getWeekDay=dayInweek + 2;
+        }else{
+            this.getWeekDay = dayInweek + 1;//周日为第一天
+        }
+        
         //一月中的第几天
         this.getMonthDay = this.oToday.getUTCDate() + 1;
         
                 
         //今天
-        this.today_date = this.sToday + '至' + this.sToday;
+        this.today_date = this.sToday + '\u81f3' + this.sToday;
         //昨天
         
         //要是昨天没有，返回今天， 昨天变灰
         var yesterday =  _CAL.getDate(this.sToday, -1);
         if(_CAL.compare_date(this.sminDate, yesterday)){
-            this.yesterday_date = yesterday + '至' + yesterday;
+            this.yesterday_date = yesterday + '\u81f3' + yesterday;
         }else{
-            this.yesterday_date = this.sminDate + '至' + this.sminDate;
+            if(startmindate) this.yesterday_date = this.sminDate + '\u81f3' + this.sminDate;
+            else this.yesterday_date = null;
         }
         
         //最近7天
         var last7_date =  _CAL.getDate(this.sToday, -7);
         if(_CAL.compare_date(this.sminDate, last7_date)){
-            this.last7_date = last7_date + '至' + this.sToday;
+            this.last7_date = last7_date + '\u81f3' + this.sToday;
         }else{
-            this.last7_date = this.sminDate + '至' + this.sToday;;
+            if(startmindate) this.last7_date = this.sminDate + '\u81f3' + this.sToday;
+            else this.last7_date = null;
         }
         
         //最近30天
         var last30_date =  _CAL.getDate(this.sToday, -30);
         if(_CAL.compare_date(this.sminDate, last30_date)){
-            this.last30_date = last30_date + '至' + this.sToday;
+            this.last30_date = last30_date + '\u81f3' + this.sToday;
         }else{
-            this.last30_date = this.sminDate + '至' + this.sToday;;
+            if(startmindate) this.last30_date = this.sminDate + '\u81f3' + this.sToday;
+            else this.last30_date =null;
         }
         
         // 本周       
         //本周周一
         var monday = '';
-        if(this.getWeekDay === 1){
+        if(dayInweek === 1){
             monday = this.sToday;
         }else{
-            monday = _CAL.getDate(this.sToday, - this.getWeekDay);
+            monday = _CAL.getDate(this.sToday, (- dayInweek+1));
         }
         
-        
-        var week_date =  _CAL.getDate(this.sToday, - this.getWeekDay);
+        if(weekstart === 1){//从周一开始
+            week_date =  monday;
+        }else{//从周日开始
+            week_date = _CAL.getDate(monday, -1);
+        }
         if(_CAL.compare_date(this.sminDate, week_date)){
-            this.week_date = week_date + '至' + this.sToday;
+            this.week_date = week_date + '\u81f3' + this.sToday;
         }else{
-            this.week_date = this.sminDate + '至' + this.sToday;;
+            if(startmindate) this.week_date = this.sminDate + '\u81f3' + this.sToday;
+            else  this.week_date =null;
         }
         
         // 本月
@@ -1621,24 +1638,31 @@ define(function(require, exports, moudle) {
         }
         
         
-        
+        //本月日期
         var month_date = month1;
         if(_CAL.compare_date(this.sminDate, month_date)){
-            this.month_date = month1 + '至' + this.sToday;
+            this.month_date = month1 + '\u81f3' + this.sToday;
         }else{
-            this.month_date = this.sminDate + '至' + this.sToday;;
+            if(startmindate) this.month_date = this.sminDate + '\u81f3' + this.sToday;
+            else this.month_date = null;
         }
         
-        // 上周       
-        var day8 = _CAL.getDate(monday, - 8);
-        var day1 = _CAL.getDate(monday, - 1);
+        // 上周 
+        if(weekstart === 1){//从上周一开始
+            day8 = _CAL.getDate(monday, - 8);
+            day1 = _CAL.getDate(monday, - 1);
+        }else{//从上上周日开始
+            day8 = _CAL.getDate(monday, - 9);
+            day1 = _CAL.getDate(monday, - 2);
+        }
+        
         if(!_CAL.compare_date(this.sminDate, day8)){
-            day8 = this.sminDate
+            day8 = startmindate ? this.sminDate : null;
         }
         if(!_CAL.compare_date(this.sminDate, day1)){
-            day1 = this.sminDate
+            day1 = startmindate ? this.sminDate : null
         }
-        this.lastweek_date =  day8 + '至' + day1;
+        this.lastweek_date =  (day8 != null && day1 != null) ?  day8 + '\u81f3' + day1 : null;
         
         // 上月
         //上月的天数
@@ -1646,18 +1670,18 @@ define(function(require, exports, moudle) {
         var day30 = _CAL.getDate(month1, - days - 1);
         var day301 = _CAL.getDate(month1, - 1);
         if(!_CAL.compare_date(this.sminDate, day30)){
-            day30 = this.sminDate
+            day30 = startmindate ? this.sminDate : null;
         }
         if(!_CAL.compare_date(this.sminDate, day301)){
-            day301 = this.sminDate
+            day301 = startmindate ? this.sminDate : null;
         }
-        this.lastmonth_date =  day301 + '至' + day30;
+        this.lastmonth_date = (day30 != null && day301 != null) ? day301 + '\u81f3' + day30 : null;
         
         
             
         //前x日   
         this.prev_date = function(sDate){
-            return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday);
+            return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday, startmindate);
         };  
     }
     
