@@ -40,9 +40,10 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 > **html:** '',//日历右边html，默认空  
 > **berfore:** function\(\)\{\},//日历出来前的行为  
 > **submit:** function\(\)\{\},//点击提交时行为  
-> **cancel** function\(\)\{\},//点击取消时行为  
-> **today** today,//今天日期，默认为当前日期  
-> **rang:** \{
+> **cancel:** function\(\)\{\},//点击取消时行为  
+> **today:** today,//今天日期，默认为当前日期  
+> **rangeday:** 31,//日历可选择的天数，默认为31天  
+> **range:** \{
 *minDate:* null,
 *maxDate:* null\},//日历最小日期，最大日期，默认为不限制  
 
@@ -65,7 +66,7 @@ var assigndate=new DateCommon(today,sminDate);//实例化获取特殊日期，�
 > **assigndate.getWeekDay** 今天是一周当中第几天  
 > **assigndate.getMonthDay** 今天是一个月当中第几天  
 > **assigndate.today_date** 返回今天日期，YYYY-MM-DD到YYYY-MM-DD，以下返回日期格式都是这种格式  
-> **assigndate.yesterday** 返回昨天日期  
+> **assigndate.yesterday_date** 返回昨天日期  
 > **assigndate.last7_date** 返回最近7天  
 > **assigndate.last30_date** 返回最近30天  
 > **assigndate.week_date** 返回本周日期  
