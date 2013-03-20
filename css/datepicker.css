@@ -29,6 +29,7 @@ body{font-size:12px;font-family: Arial,"SimSun";}
     border: solid 1px #666666;
     padding: 10px 5px;
     display: inline-block;
+    background: #fff;
 }
 .calendar{
     display: inline-block;
@@ -48,7 +49,7 @@ body{font-size:12px;font-family: Arial,"SimSun";}
     overflow: hidden;
     background: url("../images/cal-borderbottom.gif") no-repeat 0 bottom;
 }
-.cal-box:after,.calendar:after{
+.cal-box:after,.calendar:after,.calendar .right-select:after{
     visibility:hidden;
     display:block;
     font-size:0;
@@ -195,4 +196,27 @@ body{font-size:12px;font-family: Arial,"SimSun";}
 .cal-container dd a.select-range:hover,.cal-container dd .select-range{
     background: #666;
     color: #fff;
+}
+.calendar .right-select{
+    zoom: 1;
+    width: 140px;
+    padding: 22px 0;
+}
+.calendar .right-select li{
+    float: left;
+    width: 60px;
+    padding: 3px 5px;
+    text-align: center;
+}
+.calendar .right-select li a,.calendar .right-select li a:hover{
+    display: block;
+    line-height: 22px;
+    vertical-align: baseline;
+    color: #666;
+    text-decoration: none;
+}
+.calendar .right-select li .cal-selected,.calendar .right-select li .cal-selected:hover{
+    background: #666;
+    color: #fff;
+     text-decoration: none;
 }

@@ -3,7 +3,7 @@
  *该组件依赖于seajs(http://seajs.org)
  */
 define(function(require, exports, moudle) {
-
+    
     var jQuery = require('jquery');
     
     var _dateMap = {};
@@ -12,7 +12,7 @@ define(function(require, exports, moudle) {
      * 静态方法集
      * @name _CAL
      * @ignore
-    */
+     */
     var _CAL = {
         /**
          * 格式化数字，不足两位前面补0
@@ -99,7 +99,7 @@ define(function(require, exports, moudle) {
                 right: iPos.right + iScrollLeft, 
                 bottom: iPos.bottom + iScrollTop
             }
-            
+        
         },  
         /**
          * 元素选择器
@@ -219,7 +219,7 @@ define(function(require, exports, moudle) {
          * @param {object} object 伪数组：例如arguments
          * @function
          * @return array
-        */
+         */
         toArray: function(object){
             for(var result = [], i = 0, len = object.length; i < len; i++) {
                 result.push(object[i])
@@ -232,7 +232,7 @@ define(function(require, exports, moudle) {
          * @param {string} eg:2012-02-12 
          * @function
          * @return int
-        */
+         */
         getTimeByStringDate: function(stringDate){
             if(stringDate && stringDate !== 'undefined'){
                 return this.getDateByStringDate(stringDate).getTime();
@@ -244,7 +244,7 @@ define(function(require, exports, moudle) {
          * @param {string} eg:2012-02-12 
          * @function
          * @return int
-        */
+         */
         getDateByStringDate: function(stringDate){
             var pattern = /^\d{4}-\d{1,2}-\d{1,2}$/;
             if(!pattern.test(stringDate)) {
@@ -258,12 +258,12 @@ define(function(require, exports, moudle) {
             }else{
                 month = month - 1;
             }		
-			
+            
             var day = dates[2];
             if(day.length === 1) {
                 day = '0' + day;
             }
-    
+            
             return new Date(dates[0], month, day);
         },
         /**
@@ -276,13 +276,13 @@ define(function(require, exports, moudle) {
                 } else if(parseInt(days) < -1) {
                     days = days + 1;
                 }
-    
+                
                 var _today = today.split("-"), _todays = new Date(_today[0], _today[1] - 1, _today[2]).getTime(), days = days * 86400000, ends = _todays + days;
                 var end = new Date(ends);
-    
+                
                 var _month = end.getMonth() + 1;
                 var _date = end.getDate();
-    
+                
                 if(parseInt(_month) < 10) {
                     _month = '0' + _month;
                 }
@@ -325,7 +325,7 @@ define(function(require, exports, moudle) {
             }else{
                 return ori ? sDate : null;
             }        
-            
+        
         },
         
         //获得一段时间间隔的天数
@@ -361,32 +361,29 @@ define(function(require, exports, moudle) {
          * @param minDate(yyyy-mm-hh) 最小日期日期
          * @returns yyyy-mm-hh至yyyy-mm-hh
          */
-        getPrevMonthDays : function (sDate, minDate){
+        getPrevMonthDays : function (sDate, minDate, full){
             var oDate = this.getDateByStringDate(sDate);
             var oMinDate = this.getDateByStringDate(minDate);
             if(oMinDate.getTime() > oDate.getTime()){
-                return minDate + '至' + minDate;
+                return full ? null : minDate + '至' + minDate;
             }else{
                 //当前的月份
                 var month = oDate.getMonth() - 0 + 1;
                 var year = oDate.getFullYear() - 0;
-        		
+                
                 var newDate = new Date(year, month - 1, 0);
                 var days = newDate.getDate();
                 var start = newDate.getFullYear() + '-' + (newDate.getMonth() - 0 + 1).toString().replace(/^(\d)$/, "0$1") + '-' + '01';
                 var end = newDate.getFullYear() + '-' + (newDate.getMonth() - 0 + 1).toString().replace(/^(\d)$/, "0$1") + '-' + days;
-        		
+                
                 if(this.getDateByStringDate(start).getTime() < oMinDate.getTime()){
-                    start = minDate;
+                    start = full ? null : minDate;
                 }
                 if(this.getDateByStringDate(end).getTime() < oMinDate.getTime()){
-                    end = minDate;
+                    start = full ? null : minDate;
                 }
-                return start + '至' + end;
-            }    
-        	
-        	
-            return  days;
+                return start && end ? start + '至' + end : null;
+            } 
         },
         /**
          * 返回前一周
@@ -394,24 +391,24 @@ define(function(require, exports, moudle) {
          * @param minDate(yyyy-mm-hh) 最小日期日期
          * @returns yyyy-mm-hh至yyyy-mm-hh
          */
-        getPrevWeekDays : function (sDate, minDate){
+        getPrevWeekDays : function (sDate, minDate, full){
             var oDate = this.getDateByStringDate(sDate);
             var oMinDate = this.getDateByStringDate(minDate);
             if(oMinDate.getTime() > oDate.getTime()){
-                return minDate + '至' + minDate;
+                return full ? null : minDate + '至' + minDate;
             }else{
                 //周几
                 var weekday = oDate.getDay() - 0;
                 var start = this.getDate(sDate, -(7 + weekday));
                 var end = this.getDate(sDate, -(weekday + 1));
-        		
+                
                 if(this.getDateByStringDate(start).getTime() < oMinDate.getTime()){
-                    start = minDate;
+                    start = full ? null : minDate;
                 }
                 if(this.getDateByStringDate(end).getTime() < oMinDate.getTime()){
-                    end = minDate;
+                    end = full ? null : minDate;
                 }
-                return start + '至' + end;
+                return start && end ? start + '至' + end : null;
             }        	
         },
         /**
@@ -420,7 +417,7 @@ define(function(require, exports, moudle) {
          *@param b(yyyy-mm-hh) 结束日期
          *@returns true/false
          */
-        compare_date : function(a, b) {
+        compare_date : function(a, b, equal) {
             var pattern = /^\d{4}-\d{2}-\d{2}$/;
             if(!pattern.test(a) || !pattern.test(b)) {
                 return false;
@@ -431,10 +428,12 @@ define(function(require, exports, moudle) {
             //结束时间
             var arr1 = b.split("-");
             var endtime = new Date(arr1[0], arr1[1] - 1, arr1[2]).getTime();
-
-            if(starttime <= endtime) {
+            
+            if(starttime < endtime) {
                 return true;
-            } else {
+            } else if(starttime == endtime){
+                return equal ? false:true;
+            }else{
                 return false;
             }
         }
@@ -672,7 +671,6 @@ define(function(require, exports, moudle) {
              * @type Object
              */
             this.triggerNode = _CAL.$("#" + config.id.replace(/^#/, ""));
-            console.log(this.triggerNode);
             
             this.idName = config.id.replace(/^#/, "");
             /**
@@ -699,13 +697,14 @@ define(function(require, exports, moudle) {
              * @type String
              */ 
             this.startDate = config.startDate;
+            this._startDate=this.startDate;
             /**
              * 设置返程日期，格式(yyyy-mm-dd)
              * @name Calendar.endDate
              * @type String
              */ 
             this.endDate = config.endDate;  
-        
+            this._endDate=this.endDate;
             /**
              * 设置默认选择的日期，增加高亮显示，格式(yyyy, mm, dd)
              * @name Calendar.selectDate
@@ -713,36 +712,161 @@ define(function(require, exports, moudle) {
              */ 
             this.selectDate = config.selectDate && _CAL.formatStrDate(config.selectDate);
             
-            // add  kong
-            
-            //右边 的html
-            this.html = config.html || '';
             //日历出来前
             this.berfore = config.berfore || function(){};
             //点击提交时
-            this.submit = config.submit || function(){};
+            this.submit = config.submit || function(){
+                var val=this.triggerNode.value;
+                jQuery(this.triggerNode).attr("data-info",val);
+            };
             //点击取消时
-            this.cancel = config.cancel || function(){};
+            this.cancel = config.cancel || function(){
+                var val=jQuery(this.triggerNode).attr("data-info");
+                this.triggerNode.value=val;
+            };
             
             this.today = config.today || _CAL.formatStrDate(new Date());
-            
+            _holidays.today[0]=this.today;
             if(!this.triggerNode){
                 return ;
             }
             
             /**
-             * 指定日历可选范围 minDate:最小日期, maxDate:最大日期。格式new Date(yyyy, mm, dd)
+             * 指定日历选定日期范围 minDate:最小日期, maxDate:最大日期。格式new Date(yyyy, mm, dd)
              * @name Calendar.range
              * @type Object
              */
             this.range = config.range || {
                 minDate:null, 
                 maxDate:null
-            };          
+            };
+            //日历可自由选择日历天数
+            this.rangeday=config.rangeday-0 || 31;
+            
+            //周几作为一星期的开始，默认周一
+            this.weekstart=config.weekstart || 1;
+            //保存常用日历信息
+            this._quickdate={};
+            this.isquickselect=config.isquickselect || 0; 
+            //右边 的html
+            this.html = config.isquickselect ? config.html || this._getrightstr() : '';
+            
+            //鼠标点击次数
+            this._clickcount=1;
+            //当前选中的日期
+            this._clickdate='';
+            
             //创建日历
             this._create();   
             //添加事件
-            this._addEvent()
+            this._addEvent();
+            this.on("dateClick", this.dateClick);
+        },
+        /**
+         *获取今天、昨天、本月、上月等一些信息
+         */
+        _getquickdate:function(){
+            var that=this;
+            var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart, false);
+            if(!that.isCalEnd){
+                that._quickdate.today_date=dateCommon.today_date;
+                that._quickdate.yesterday_date=dateCommon.yesterday_date;
+                that._quickdate.last7_date=dateCommon.last7_date;
+                that._quickdate.last30_date=dateCommon.last30_date;
+                that._quickdate.week_date=dateCommon.week_date;
+                that._quickdate.lastweek_date=dateCommon.lastweek_date;
+                that._quickdate.month_date=dateCommon.month_date;
+                that._quickdate.lastmonth_date=dateCommon.lastmonth_date;
+            }else if(that.CalStart!=undefined){
+                var startval=that.CalStart.triggerNode.value;
+                var day=_CAL.getIntervalsByDates(startval);
+                if(day=1){
+                    var prev1date=_CAL.getDate(startval.split('至')[0], -1);
+                    var prevweekdate=_CAL.getDate(startval.split('至')[0], -8);//上周同期 
+                    that.startDate && _CAL.compare_date(prev1date,that.startDate,true) ? null : that._quickdate.prev_1_date=prev1date + '至' + prev1date;
+                    that.startDate && _CAL.compare_date(prevweekdate,that.startDate,true) ? null : that._quickdate.prev_week_date=prevweekdate+'至'+prevweekdate;
+                    var oTime =  _CAL.getDateByStringDate(startval.split('至')[0]);
+                    var nowYear = oTime.getYear(); 
+                    nowYear += (nowYear < 2000) ? 1900 : 0;         
+                    nowYear = nowYear;      
+                    var st2 = new Date(nowYear, oTime.getMonth() - 1, oTime.getDate());
+                    st2 = _CAL.formatStrDate(st2);//上月同期
+                    that.startDate && _CAL.compare_date(st2,that.startDate,true) ? null : that._quickdate.prev_month_date=st2 + '至' + st2; 
+                }else{
+                    switch(that._getdatekey(startval)){
+                        case 'last7_date':
+                            break;
+                        case 'last30_date':
+                            break;
+                        case 'week_date':
+                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
+                            prevweekdates ? that._quickdate.prev_week_dates=prevweekdates : null;
+                            break;
+                        case 'lastweek':
+                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
+                            prevweekdates ? that._quickdate.prev_week_dates=prevweekdates : null;
+                            break;
+                        case 'month_date':
+                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
+                            prevmonthdates ? that._quickdate.prev_month_dates=prevmonthdates : null;
+                            break;
+                        case 'lastmonth_date':
+                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
+                            prevmonthdates ? that._quickdate.prev_month_dates=prevmonthdates : null;
+                            break;
+                    }
+                }
+            }
+            console.log(that._quickdate);
+        },
+        _getdatekey:function(datestr){
+            for(p in this.CalStart._quickdate){
+                if(this.CalStart._quickdate[p]==datestr){
+                    return p;
+                }
+            }  
+        },
+        _getrightstr:function(){
+            this._getquickdate();
+            var str='<ul class="right-select">';
+            var nowdate=jQuery(this.triggerNode).val();
+            for(var p in this._quickdate){
+                if(this._quickdate[p]!=null){
+                    str+='<li><a href="javascript:" ';
+                    str+='class="'+p;
+                    if(nowdate==this._quickdate[p]) str+=' cal-selected'
+                    str+='">';
+                    switch(p){
+                        case 'today_date':
+                            str+='今天';
+                            break;
+                        case 'yesterday_date':
+                            str+='昨天';
+                            break;
+                        case 'last7_date':
+                            str+='最近7天';
+                            break;
+                        case 'last30_date':
+                            str+='最近30天';
+                            break;
+                        case 'week_date':
+                            str+='本周';
+                            break;
+                        case 'lastweek_date':
+                            str+='上周';
+                            break;
+                        case 'month_date':
+                            str+='本月';
+                            break;
+                        case 'lastmonth_date':
+                            str+='上月';
+                            break;
+                    }
+                    str+='</a></li>';
+                }
+            }
+            str+='</ul>';
+            return str;
         },
         /**
          * 创建日历结构
@@ -756,6 +880,7 @@ define(function(require, exports, moudle) {
             oIframe = null,
             oDiv = document.createElement("div"),
             oMsg = document.createElement("div");
+            jQuery(this.triggerNode).addClass("datepickerinput");
             //显示关闭按钮
             this.isCloseBtn && aTmp.push("<span class=\"cal-close\">close</span>");
             
@@ -821,6 +946,7 @@ define(function(require, exports, moudle) {
             this.isPopup && (this.hide().container.style.position = "absolute");
             
             //初次渲染
+            jQuery(this.triggerNode).attr('data-info',this.triggerNode.value)
             this.render();
             
             //触发元素为输入框时的相关设置
@@ -980,13 +1106,13 @@ define(function(require, exports, moudle) {
                                 iCur < this.endDate.replace(this.reg, "") && 
                                 ((oA.children[0] || oA).className = "select-range");
                             }
-                            */
+                             */
                             if(this.range.minDate && this.range.maxDate) {
                                 iCur >= _CAL.formatStrDate(this.range.minDate).replace(this.reg, "") && 
                                 iCur <= _CAL.formatStrDate(this.range.maxDate).replace(this.reg, "") && 
                                 ((oA.children[0] || oA).className = "select-range");
                             }
-                            
+                        
                         }                   
                         oFarg.appendChild(oA)
                     }
@@ -1035,7 +1161,7 @@ define(function(require, exports, moudle) {
             //            this.container.style.left = l - 362 + "px"
             var caloffset=jQuery(this.triggerNode).offset();
             var height=jQuery(this.triggerNode).outerHeight(true);
-            var box=jQuery(".right_quickButton").outerWidth(true);
+            var box=jQuery('#'+this.id+" .right_quickButton").outerWidth(true);
             var left=caloffset.left;
             var top=caloffset.top+height;
             this.container.style.top  = top + "px";
@@ -1051,7 +1177,7 @@ define(function(require, exports, moudle) {
         _addEvent: function() {
             var that = this,
             obj = this.container;
-            var dateCommon = new DateCommon(that.today, that.startDate);
+            var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart);
             
             //为日历控件添加CLICK事件监听
             _CAL.on(obj, "click", function(e) {
@@ -1059,11 +1185,10 @@ define(function(require, exports, moudle) {
                 that.closeTimer && clearTimeout(that.closeTimer);
                 e = e || event;
                 var oTarget = e.target || e.srcElement;
-                console.log(e);
                 
                 if(jQuery(oTarget).hasClass('submitA')){
                     if(jQuery(oTarget).hasClass('button-submit')){
-                		
+                        
                     }else{
                         return true;
                     }
@@ -1073,10 +1198,11 @@ define(function(require, exports, moudle) {
                     oTarget.className = oTarget.className.split(' ')[0];
                 }
                 
-                var preDate = jQuery('#datepicker_compareDate').val();
-                var datepickerInput = jQuery('#datepickerInput').val();
+                var preDate = jQuery(that.triggerNode).val();
+                var datepickerInput = that.isCalEnd ? jQuery(that.CalEnd.triggerNode).val() : null;
                 switch(oTarget.className) {
                     case "cal-close":
+                        that.cancel();
                         that.hide();
                         break;
                     case "button-close":
@@ -1094,45 +1220,45 @@ define(function(require, exports, moudle) {
                         that.nextMonth();
                         break;
                     case "today_date"://今天
-                        that.setDateInfo(dateCommon.today_date);
+                        that.setQuickDateInfo(dateCommon.today_date);
                         break;
                     case "yesterday_date"://昨天
-                        that.setDateInfo(dateCommon.yesterday_date);
+                        that.setQuickDateInfo(dateCommon.yesterday_date);
                         break;
                     case "last7_date"://最近7日
-                        that.setDateInfo(dateCommon.last7_date);
+                        that.setQuickDateInfo(dateCommon.last7_date);
                         break;
                     case "last30_date"://最近30日
-                        that.setDateInfo(dateCommon.last30_date);
+                        that.setQuickDateInfo(dateCommon.last30_date);
                         break;
                     case "week_date"://本周
-                        that.setDateInfo(dateCommon.week_date);
+                        that.setQuickDateInfo(dateCommon.week_date);
                         break;
                     case "lastweek_date"://上周
-                        that.setDateInfo(dateCommon.lastweek_date);
+                        that.setQuickDateInfo(dateCommon.lastweek_date);
                         break;
                     case "month_date"://本月
-                        that.setDateInfo(dateCommon.month_date);
+                        that.setQuickDateInfo(dateCommon.month_date);
                         break; 
                     case "lastmonth_date"://上月
-                        that.setDateInfo(dateCommon.lastmonth_date);
+                        that.setQuickDateInfo(dateCommon.lastmonth_date);
                         break;                                  
                     case "prev_1_date": //前1日
-                        that.setDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -1) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -1));  
+                        that.setQuickDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -1) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -1));  
                         break;
-                        
+                    
                     case "prev_month_dates": //前1月
-                        that.setDateInfo(_CAL.getPrevMonthDays(datepickerInput.split('至')[0], that.startDate));
-                    	
+                        that.setQuickDateInfo(_CAL.getPrevMonthDays(datepickerInput.split('至')[0], that.startDate));
+                        
                         break;
                     case "prev_week_dates": //前1周
-                        that.setDateInfo(_CAL.getPrevWeekDays(datepickerInput.split('至')[0], that.startDate));
+                        that.setQuickDateInfo(_CAL.getPrevWeekDays(datepickerInput.split('至')[0], that.startDate));
                         break;
                     case "prev_week_date": //上周同期(单天)
-                        that.setDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -8) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -8));  
+                        that.setQuickDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -8) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -8));  
                         //that.setDateInfo(_CAL.getDate(preDate.split('至')[0], -7) + '至' + _CAL.getDate(preDate.split('至')[0], -7));  
                         break;
-                        
+                    
                     case "prev_month_date": //上月同期(单天)
                         var oTime =  _CAL.getDateByStringDate(jQuery('#datepickerInput').val().split('至')[0]);
                         var nowYear = oTime.getYear(); 
@@ -1140,29 +1266,28 @@ define(function(require, exports, moudle) {
                         nowYear = nowYear;      
                         var st2 = new Date(nowYear, oTime.getMonth() - 1, oTime.getDate());
                         st2 = _CAL.formatStrDate(st2);
-                        that.setDateInfo( st2 + '至' + st2); 
+                        that.setQuickDateInfo( st2 + '至' + st2); 
                         break;
                     
                     case "prev_7_date": //前7日
-                        that.setDateInfo(preDate);  
+                        that.setQuickDateInfo(preDate);  
                         break;
                     case "prev_30_date": //前30日
-                        that.setDateInfo(preDate);  
-                        break;
-                        
-                    case "prev_same_date":
-                        that.setDateInfo(preDate);
-                        break;//向前等长时间
-                                    
-                    case "lastmonth_date"://上月
-                        that.setDateInfo(preDate);  
+                        that.setQuickDateInfo(preDate);  
                         break;
                     
+                    case "prev_same_date":
+                        that.setQuickDateInfo(preDate);
+                        break;//向前等长时间
+                    
+                    case "lastmonth_date"://上月
+                        that.setQuickDateInfo(preDate);  
+                        break;
+                
                 }
-                console.log(oTarget.className);
                 if(oTarget.className){
-                    jQuery('a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
-                    jQuery('a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
+                    jQuery('#'+this.id+' a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
+                    jQuery('#'+this.id+' a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
                 }
                 
                 
@@ -1179,24 +1304,26 @@ define(function(require, exports, moudle) {
             });
             //日历为弹出显示时添加事件
             if(this.isPopup) {
+                if(jQuery('#' + this.id +' .right-select li').length<5){
+                    jQuery('#' + this.id +' .right-select').width(70);
+                }
                 jQuery(this.triggerNode).off('focus');
                 _CAL.on(this.triggerNode, "focus", function(e) {
+                    jQuery(".datepicker_container").hide();//关闭其他日期
                     that.isHide = !1;
                     that.closeTimer && clearTimeout(that.closeTimer);
                     e = e || event;
                     var oTarget = e.target || e.srcElement,
-                    oIframe = _CAL.$("iframe", that.container)[0];  
-                    that._setPos();
-                    
+                    oIframe = _CAL.$("iframe", that.container)[0];
                     //add kong
-                    jQuery('div.datepicker_container').hide();
+                    jQuery('#' + this.id +' div.datepicker_container').hide();
                     that.berfore(that.triggerNode.value);
-                    
                     that.show();
+                    that._setPos();
                     oTarget.select && oTarget.select();
                     oIframe && (oIframe.style.width = that.container.offsetWidth + "px", oIframe.style.height = that.container.offsetHeight + "px");
                 });
-    
+                
                 /*
                 _CAL.on(this.triggerNode, "blur", function() {                              
                     that.closeTimer = setTimeout(function() {
@@ -1209,9 +1336,10 @@ define(function(require, exports, moudle) {
                     that.isHide && that.hide()
                 });
                 
-                */
+                 */
                 
                 _CAL.on(window, "resize", function() {
+                    console.log(1289);
                     that._setPos()  
                 })
             }
@@ -1272,7 +1400,7 @@ define(function(require, exports, moudle) {
                 this.render(new Date(this.year, this.month - (this.monthStep + 1), 1));
                 this.run("prevMonthClick");
             }       
-            
+        
         },
         /**
          * 显示日历
@@ -1280,7 +1408,8 @@ define(function(require, exports, moudle) {
          * @function
          */
         show: function() {
-            this.container.style.display = "block";     
+            this.container.style.display = "block";   
+            //console.log(1359);
             this.run("show");
             return this
         },
@@ -1305,7 +1434,7 @@ define(function(require, exports, moudle) {
             /* 
             sDate = sDate || this.triggerNode.value;
             this.oDateInfo.innerHTML = this.rDate.test(sDate) ? (this.triggerNode.value = sDate, this.render(sDate), this.getDateInfo(sDate)[this.isHoliday ? "holiday" : "week"]) : ""
-         */
+             */
             if(!this.triggerNode){
                 return ;
             }
@@ -1327,7 +1456,16 @@ define(function(require, exports, moudle) {
             }else{
                 seajs.log('日期格式不正确');
             }
-            
+        
+        },
+        /**
+         *快速设置显示日历
+         */
+        setQuickDateInfo:function(sDate){
+            this.startDate=this._startDate;
+            this.endDate=this._endDate;
+            this._clickcount=1;
+            this.setDateInfo(sDate);
         },
         /**
          * 获取指定间隔日期
@@ -1365,7 +1503,52 @@ define(function(require, exports, moudle) {
                     return that.isHolidayTips ? _dateMap[sDate] || sWeekName : sWeekName
                 }()
             }
-        },      
+        },
+        /*
+         *日期点击事件
+         **/
+        dateClick:function(obj){
+            // 用户点击右边的时候不触发事件
+            if(jQuery(obj).parent().parent().attr('class') === 'right-select') {
+                return;
+            }
+            if(jQuery(obj).hasClass('disabled')){
+                return ;
+            }
+            
+            jQuery('#' + this.id +' .cal-selected').removeClass('cal-selected');
+            
+            if(this._clickcount % 2 != 0) {
+                this._clickdate = obj['data-date'];
+                jQuery('#' + this.id+' div.cal-container a').removeClass('select-range').removeClass('end-date').removeClass('start-date');
+                //根据当前选择的日期确定开始日期，跟结束日期
+                var prevdate=_CAL.getDate(this._clickdate, -this.rangeday);
+                var nextdate=_CAL.getDate(this._clickdate, this.rangeday);
+                if((this._startDate && _CAL.compare_date(this._startDate,prevdate)) || !this._startDate) this.startDate=prevdate;
+                else this.startDate=this._startDate;
+                if((this._endDate && !_CAL.compare_date(this._endDate,nextdate)) || !this._endDate) this.endDate=nextdate;
+                else this.endDate=this._endDate;
+                this.setDateInfo(this._clickdate + '\u81f3' + this._clickdate);
+                if(this.isquickselect) this._checkdate(this._clickdate + '\u81f3' + this._clickdate);
+            } else {
+                //增加选中样式
+                this.startDate=this._startDate;
+                this.endDate=this._endDate;
+                this.setDateInfo(this._clickdate + '\u81f3' + obj['data-date']);
+                if(this.isquickselect) this._checkdate(this._clickdate + '\u81f3' + obj['data-date']);
+            }
+            this._clickcount++;
+        },
+        //匹配右边日期值等于str,添加选中样式
+        _checkdate:function(str){
+            for(p in this._quickdate){
+                if(this._quickdate[p]==str){
+                    jQuery('#' + this.id +" .cal-selected").removeClass("cal-selected");
+                    jQuery('#' + this.id +" ."+p).addClass("cal-selected");
+                    break;
+                }
+            }  
+        },
         /**
          * 显示鼠标移入的日期距开始日期的时间段
          * @name Calendar#showRange
@@ -1563,19 +1746,19 @@ define(function(require, exports, moudle) {
         this.oToday = _CAL.getDateByStringDate(today);
         this.sToday = today;
         this.sminDate = sminDate;
+        var dayInweek= this.oToday.getDay();
         
-        var dayInweek= this.oToday.getUTCDay()
         if(weekstart === 1){
             if(dayInweek==0) this.getWeekDay=7;
-            else this.getWeekDay=dayInweek + 2;
+            else this.getWeekDay=dayInweek;
         }else{
             this.getWeekDay = dayInweek + 1;//周日为第一天
         }
         
         //一月中的第几天
-        this.getMonthDay = this.oToday.getUTCDate() + 1;
+        this.getMonthDay = this.oToday.getDate();
         
-                
+        
         //今天
         this.today_date = this.sToday + '\u81f3' + this.sToday;
         //昨天
@@ -1610,10 +1793,12 @@ define(function(require, exports, moudle) {
         // 本周       
         //本周周一
         var monday = '';
-        if(dayInweek === 1){
-            monday = this.sToday;
+        if(dayInweek === 0){
+            monday = _CAL.getDate(this.sToday, -7);
+        }else if(dayInweek === 1){
+            monday =this.sToday;
         }else{
-            monday = _CAL.getDate(this.sToday, (- dayInweek+1));
+            monday = _CAL.getDate(this.sToday, - dayInweek);
         }
         
         if(weekstart === 1){//从周一开始
@@ -1653,7 +1838,7 @@ define(function(require, exports, moudle) {
             day1 = _CAL.getDate(monday, - 1);
         }else{//从上上周日开始
             day8 = _CAL.getDate(monday, - 9);
-            day1 = _CAL.getDate(monday, - 2);
+            day1 = _CAL.getDate(monday, - 3);
         }
         
         if(!_CAL.compare_date(this.sminDate, day8)){
@@ -1678,15 +1863,15 @@ define(function(require, exports, moudle) {
         this.lastmonth_date = (day30 != null && day301 != null) ? day301 + '\u81f3' + day30 : null;
         
         
-            
+        
         //前x日   
         this.prev_date = function(sDate){
             return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday, startmindate);
-        };  
+        };
     }
     
     exports._CAL = _CAL;
     exports.Calendar = Calendar;//输出日历对象
     exports.DateCommon = DateCommon;//输出特定的日期
-    
+
 });

@@ -37,7 +37,8 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 *left:*0\},//日历部件位置微调  
 > **date:** today,//突出渲染的日期，默认为今天  
 > **selectDate:** null,//设置默认选择的日期范围  
-> **html:** '',//日历右边html，默认空  
+> **isquickselect:** null,//是否设置右边快捷日期，默认不设置  
+> **html:** '',//日历右边html，默认空，如果isquickselect设为true,会根据系统自动生成右边快捷日期  
 > **berfore:** function\(\)\{\},//日历出来前的行为  
 > **submit:** function\(\)\{\},//点击提交时行为  
 > **cancel:** function\(\)\{\},//点击取消时行为  
