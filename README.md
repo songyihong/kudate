@@ -33,8 +33,8 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 > **count:** 1,//日历的个数，默认为1个  
 > **monthStep:** count,//上下个月的切换步长，默认为count值，即整块切换  
 > **revise:** \{
-*top:*0,
-*left:*0\},//日历部件位置微调  
+_top:_0,
+_left:_0\},//日历部件位置微调  
 > **date:** today,//突出渲染的日期，默认为今天  
 > **selectDate:** null,//设置默认选择的日期范围  
 > **isquickselect:** null,//是否设置右边快捷日期，默认不设置  

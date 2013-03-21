@@ -1164,8 +1164,8 @@ define(function(require, exports, moudle) {
             var box=jQuery('#'+this.id+" .right_quickButton").outerWidth(true);
             var left=caloffset.left;
             var top=caloffset.top+height;
-            this.container.style.top  = top + "px";
-            this.container.style.left = left + "px";
+            this.container.style.top  = top + this.revise.top + "px";
+            this.container.style.left = left + this.revise.left + "px";
             this.container.style.width = box + 232*(this.count-0)+1+"px";
         },
         /**
