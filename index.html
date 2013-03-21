@@ -1,90 +1,91 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Kudate : javascript calendar" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Kudate</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/songyihong/kudate">View on GitHub</a>
-
-          <h1 id="project_title">Kudate</h1>
-          <h2 id="project_tagline">javascript calendar</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/songyihong/kudate/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/songyihong/kudate/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>kudate</h1>
-
-<p>一个日期组件，直接选定单日期或多日期</p>
-
-<h2>如何使用</h2>
-
-<p>var calendar=new  Calendar([config]);//实例化日期<br>
-日期格式规定：
-<strong>YYYY-MM-DD</strong> 或 
-<strong>YYYY\MM\DD</strong><br>
-双日期格式：
-<strong>YYYY-MM-DD到YYYY-MM-DD</strong> 或 
-<strong>YYYY\MM\DD到YYYY\MM\DD</strong>  </p>
-
-<h3>1、config:参数配置</h3>
-
-<p>{  </p>
-
-<blockquote>
-<p><strong>isPopup:</strong> true/false,//是否弹出显示日期<br><strong>id:</strong> id,//日历容器ID，为空则自动生成ID<br><strong>isSelect:</strong> false/true,//是否可以选择，默认不可<br><strong>isPrevBtn:</strong> false/true,//是否显示上个月按钮，默认不显示<br><strong>isNextBtn:</strong> false/true,//是否显示下个月按钮，默认不显示<br><strong>isCloseBtn:</strong> false/true,//是否显示关闭按钮，默认不显示<br><strong>isHoliday:</strong> false/true,//是否显示特殊节假日，默认不显示<br><strong>isHolidayTips:</strong> false/true,//是否显示特殊节假日前后三天，默认不显示<br><strong>isReadonly:</strong> false/true,//设置日历输入框是否只读，默认false<br><strong>isDateInfo:</strong> false/true,//是否显示日期信息<br><strong>DateInfoClass:</strong> 'data-info',//日期信息classname，默认为data-info<br><strong>isMessage:</strong> false/true,//日历是否包含提示信息<br><strong>sMessage:</strong> '',//日历提示信息内容默认为空<br><strong>CalStart:</strong> null,//出发日期日历实例，一般可用在一个页面两个日历有关联关系，一个是开始，一个是结束<br><strong>isCalStart:</strong> fasle/true,//是否为出发日历实例，默认否<br><strong>CalEnd:</strong> null,//结束日历实例，默认为null，与CalStart对应使用<br><strong>isCalEnd:</strong> false/true,//是否为结束日历实例，默认否<br><strong>startDate:</strong> null,//日历开始日期<br><strong>endDate:</strong> null,//日历结束日期，配合上面5个参数实现淘宝旅行网日期选择效果<br><strong>count:</strong> 1,//日历的个数，默认为1个<br><strong>monthStep:</strong> count,//上下个月的切换步长，默认为count值，即整块切换<br><strong>revise:</strong> {
-<em>top:</em> 0,
-<em>left:</em> 0},//日历部件位置微调<br><strong>date:</strong> today,//突出渲染的日期，默认为今天<br><strong>selectDate:</strong> null,//设置默认选择的日期范围<br><strong>isquickselect:</strong> null,//是否设置右边快捷日期，默认不设置<br><strong>html:</strong> '',//日历右边html，默认空，如果isquickselect设为true,会根据系统自动生成右边快捷日期<br><strong>berfore:</strong> function(){},//日历出来前的行为<br><strong>submit:</strong> function(){},//点击提交时行为<br><strong>cancel:</strong> function(){},//点击取消时行为<br><strong>today:</strong> today,//今天日期，默认为当前日期<br><strong>rangeday:</strong> 31,//日历可选择的天数，默认为31天<br><strong>range:</strong> {
-<em>minDate:</em> null,
-<em>maxDate:</em> null},//日历最小日期，最大日期，默认为不限制  </p>
-</blockquote>
-
-<p>}  </p>
-
-<h3>2、自定义事件</h3>
-
-<p>自定义事件主要灵活用在处理日期时与外部的交互<br>
-目前支持自定义事件类型：<br><strong>show</strong>:日期显示事件<br><strong>hide</strong>:日期隐藏事件<br><strong>dateClick</strong>:可点击日期事件<br><strong>nextMonthClick</strong>:下个月事件<br><strong>prevMonthClick</strong>:上个月事件<br>
-添加自定义事件<br><strong>calendar.on("元素",“事件类型”,“事件处理函数”)</strong></p>
-
-<h2>获取一些特定的日期</h2>
-
-<p>var assigndate=new DateCommon(today,sminDate);//实例化获取特殊日期，参数为今天日期(YYYY-MM-DD)、最小日期(YYYY-MM-DD)<br>
-可以获得如下一些日期信息  </p>
-
-<blockquote>
-<p><strong>assigndate.getWeekDay</strong> 今天是一周当中第几天<br><strong>assigndate.getMonthDay</strong> 今天是一个月当中第几天<br><strong>assigndate.today_date</strong> 返回今天日期，YYYY-MM-DD到YYYY-MM-DD，以下返回日期格式都是这种格式<br><strong>assigndate.yesterday_date</strong> 返回昨天日期<br><strong>assigndate.last7_date</strong> 返回最近7天<br><strong>assigndate.last30_date</strong> 返回最近30天<br><strong>assigndate.week_date</strong> 返回本周日期<br><strong>assigndate.month_date</strong> 返回本月日期<br><strong>assigndate.lastweek_date</strong> 返回上周日期<br><strong>assigndate.lastmonth_date</strong> 返回上月日期<br><strong>assigndate.prev_date(sDate)</strong> 参数sdate为(YYYY-MM-DD到YYYY-MM-DD)，返回在sminDate到today之间由sDate向前推或向后推跟sDate同天数的日期  </p>
-</blockquote>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Kudate maintained by <a href="https://github.com/songyihong">songyihong</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>日期选择组件示例</title>
+        <script src="./lib/sea.js" data-config="../config" id="seajsnode"></script>
+    </head>
+    <body>
+        <div class="example">
+            <h1>日期组件</h1>
+            <div>
+                <input type="text" value="2013-02-12至2013-03-13"  id="datepickerInput" autocomplete="off"/>
+            </div>
+            <h1>关联日期</h1>
+            <div>
+                <input type="text" value="2013-02-12至2013-03-13"  id="startdate" autocomplete="off"/>
+                <input type="text" value="2013-02-12至2013-03-13"  id="enddate" autocomplete="off"/>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var KU={
+                opendate:'',
+                mindate:''
+            }
+            seajs.use(['jquery','./src/datepicker','./css/datepicker.css'], function($,datepicker) {
+                seajs.log(datepicker);
+                var calendar=new datepicker.Calendar({
+                    id : '#datepickerInput',
+                    isPopup : 1,
+                    isPrevBtn : !0,
+                    isNextBtn : !0,
+                    isCloseBtn : !0,
+                    count : 2,
+                    monthStep : 1,
+                    isHoliday : 1,
+                    isHolidayTips : 1,
+                    isReadonly : 0,
+                    isDateInfo : !0,
+                    isSelect:0,
+                    isquickselect:1,
+                    weekstart:7,
+                    today:'2013-03-19',
+                    endDate:'2013-03-20',
+                    startDate:'2013-03-11'
+                });
+                var startcalendar=new datepicker.Calendar({
+                    id : '#startdate',
+                    isPopup : 1,
+                    isPrevBtn : !0,
+                    isNextBtn : !0,
+                    isCloseBtn : !0,
+                    count : 2,
+                    monthStep : 1,
+                    isHoliday : 1,
+                    isHolidayTips : 1,
+                    isReadonly : 0,
+                    isDateInfo : !0,
+                    isSelect:0,
+                    isquickselect:1,
+                    weekstart:7,
+                    isCalStart:1,
+                    CalEnd:endcalendar,
+                    today:'2013-03-19',
+                    endDate:'2013-03-20',
+                    startDate:'2012-12-11'
+                });
+                var endcalendar=new datepicker.Calendar({
+                    id : '#enddate',
+                    isPopup : 1,
+                    isPrevBtn : !0,
+                    isNextBtn : !0,
+                    isCloseBtn : !0,
+                    count : 2,
+                    monthStep : 1,
+                    isHoliday : 1,
+                    isHolidayTips : 1,
+                    isReadonly : 0,
+                    isDateInfo : !0,
+                    isSelect:0,
+                    isquickselect:1,
+                    weekstart:7,
+                    isCalEnd:1,
+                    CalStart:startcalendar,
+                    today:'2013-03-19',
+                    endDate:'2013-03-20',
+                    startDate:'2012-12-11'
+                });
+            });
+        </script>
+    </body>
 </html>
