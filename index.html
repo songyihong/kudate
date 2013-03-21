@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>日期选择组件</title>
-        <script src="/lib/sea.js" data-config="/config" id="seajsnode"></script>
+        <script src="./lib/sea.js" data-config="./config" id="seajsnode"></script>
     </head>
     <body>
         <div class="example">
@@ -22,7 +22,7 @@
                 opendate:'',
                 mindate:''
             }
-            seajs.use(['jquery','/src/datepicker','/css/datepicker.css'], function($,datepicker) {
+            seajs.use(['jquery','./src/datepicker','./css/datepicker.css'], function($,datepicker) {
                 seajs.log(datepicker);
                 var calendar=new datepicker.Calendar({
                     id : '#datepickerInput',
