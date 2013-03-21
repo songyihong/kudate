@@ -295,8 +295,7 @@ define(function(require, exports, moudle) {
         },
         
         //根据sDate 来获得相同时间段的时间 , 来设置第二个日历的时间 ，可用在同时向前或向后多少天
-        getPrevSameTime : function (sDate, sminDate, smaxDate, returnori){
-            var ori=returnori==undefined ? true : returnori;//但不可向前或向后时是否返回原值，默认返回原值
+        getPrevSameTime : function (sDate, sminDate, smaxDate, returnori ,forward){
             var st = sDate.split('至')[0],  et = sDate.split('至')[1];
             
             //开始到 最小时间的间隔
@@ -307,9 +306,8 @@ define(function(require, exports, moudle) {
             
             //获得间隔天数
             var intervals0 = this.getIntervalsByDates(sDate) - 0;
-            
             if(intervals0 === 0){
-                return _CAL.getDate(st, -1) + '至' + _CAL.getDate(st, -1);
+                return !returnori ? _CAL.getDate(st, -1) + '至' + _CAL.getDate(st, -1) : null;
             }
             
             if(intervals1 > intervals0){
@@ -317,13 +315,13 @@ define(function(require, exports, moudle) {
                 var _et = _CAL.getDate(st, -1);
                 var _st = _CAL.getDate(_et, - intervals0);
                 return _st + '至' + _et;
-            }else if(intervals2 > intervals0){
+            }else if(!forward && intervals2 > intervals0){
                 //向后退
                 var _et = _CAL.getDate(et, 1);
                 var _st = _CAL.getDate(_et, intervals0);
                 return _st + '至' + _et;
             }else{
-                return ori ? sDate : null;
+                return !returnori ? sDate : null;
             }        
         
         },
@@ -748,8 +746,9 @@ define(function(require, exports, moudle) {
             //保存常用日历信息
             this._quickdate={};
             this.isquickselect=config.isquickselect || 0; 
-            //右边 的html
-            this.html = config.isquickselect ? config.html || this._getrightstr() : '';
+            //右边 的html\
+            this._html=config.html || 0;
+            this.html = this.isquickselect ? this._html || this._getrightstr() : '';
             
             //鼠标点击次数
             this._clickcount=1;
@@ -768,6 +767,7 @@ define(function(require, exports, moudle) {
         _getquickdate:function(){
             var that=this;
             var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart, false);
+            that._quickdate={};
             if(!that.isCalEnd){
                 that._quickdate.today_date=dateCommon.today_date;
                 that._quickdate.yesterday_date=dateCommon.yesterday_date;
@@ -780,51 +780,59 @@ define(function(require, exports, moudle) {
             }else if(that.CalStart!=undefined){
                 var startval=that.CalStart.triggerNode.value;
                 var day=_CAL.getIntervalsByDates(startval);
-                if(day=1){
+                if(day==0){
                     var prev1date=_CAL.getDate(startval.split('至')[0], -1);
                     var prevweekdate=_CAL.getDate(startval.split('至')[0], -8);//上周同期 
-                    that.startDate && _CAL.compare_date(prev1date,that.startDate,true) ? null : that._quickdate.prev_1_date=prev1date + '至' + prev1date;
-                    that.startDate && _CAL.compare_date(prevweekdate,that.startDate,true) ? null : that._quickdate.prev_week_date=prevweekdate+'至'+prevweekdate;
+                    that._quickdate.prev_1_date=that.startDate && _CAL.compare_date(prev1date,that.startDate,true) ? null : prev1date + '至' + prev1date;
+                    that._quickdate.prev_week_date=that.startDate && _CAL.compare_date(prevweekdate,that.startDate,true) ? null : prevweekdate+'至'+prevweekdate;
                     var oTime =  _CAL.getDateByStringDate(startval.split('至')[0]);
                     var nowYear = oTime.getYear(); 
                     nowYear += (nowYear < 2000) ? 1900 : 0;         
                     nowYear = nowYear;      
                     var st2 = new Date(nowYear, oTime.getMonth() - 1, oTime.getDate());
                     st2 = _CAL.formatStrDate(st2);//上月同期
-                    that.startDate && _CAL.compare_date(st2,that.startDate,true) ? null : that._quickdate.prev_month_date=st2 + '至' + st2; 
+                    that._quickdate.prev_month_date=that.startDate && _CAL.compare_date(st2,that.startDate,true) ? null : st2 + '至' + st2; 
                 }else{
                     switch(that._getdatekey(startval)){
                         case 'last7_date':
+                            var last7date=_CAL.getPrevSameTime(startval,that.startDate,that.endDate,true,true);
+                            that._quickdate.prev_7_date=last7date ? last7date : null;
                             break;
                         case 'last30_date':
+                            var last30date=_CAL.getPrevSameTime(startval,that.startDate,that.endDate,true,true);
+                            that._quickdate.prev_30_date=last30date ? last30date : null;
                             break;
                         case 'week_date':
                             var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
-                            prevweekdates ? that._quickdate.prev_week_dates=prevweekdates : null;
+                            that._quickdate.prev_week_dates=prevweekdates ? prevweekdates : null;
                             break;
                         case 'lastweek':
                             var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
-                            prevweekdates ? that._quickdate.prev_week_dates=prevweekdates : null;
+                            that._quickdate.prev_week_dates=prevweekdates ? prevweekdates : null;
                             break;
                         case 'month_date':
                             var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
-                            prevmonthdates ? that._quickdate.prev_month_dates=prevmonthdates : null;
+                            that._quickdate.prev_month_dates=prevmonthdates ? prevmonthdates : null;
                             break;
                         case 'lastmonth_date':
                             var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
-                            prevmonthdates ? that._quickdate.prev_month_dates=prevmonthdates : null;
+                            that._quickdate.prev_month_dates=prevmonthdates ? prevmonthdates : null;
+                            break;
+                        case 'other':
+                            var prevsamedate=_CAL.getPrevSameTime(startval,that.startDate,that.endDate,true,true);
+                            that._quickdate.prev_same_date=prevsamedate ? prevsamedate : null;
                             break;
                     }
                 }
             }
-            console.log(that._quickdate);
         },
         _getdatekey:function(datestr){
             for(p in this.CalStart._quickdate){
                 if(this.CalStart._quickdate[p]==datestr){
                     return p;
                 }
-            }  
+            }
+            return 'other';
         },
         _getrightstr:function(){
             this._getquickdate();
@@ -860,6 +868,30 @@ define(function(require, exports, moudle) {
                             break;
                         case 'lastmonth_date':
                             str+='上月';
+                            break;
+                        case 'prev_1_date':
+                            str+='前一天';
+                            break;
+                        case 'prev_week_date':
+                            str+='上周同期';
+                            break;
+                        case 'prev_month_date':
+                            str+='上月同期';
+                            break;
+                        case 'prev_7_date':
+                            str+='前7天';
+                            break;
+                        case 'prev_30_date':
+                            str+='前30天';
+                            break;
+                        case 'prev_week_dates':
+                            str+='前一周';
+                            break;
+                        case 'prev_month_dates':
+                            str+='前一月';
+                            break;
+                        case 'prev_same_date':
+                            str+='向前等长时间';
                             break;
                     }
                     str+='</a></li>';
@@ -934,7 +966,7 @@ define(function(require, exports, moudle) {
             if(oIframe) {
                 var style = oIframe.style;
                 style.position = "absolute";
-                style.top = style.left = "-1px";
+                style.top = style.left = "0px";
                 style.filter = "alpha(opacity=0)";
                 style.zIndex = -1;
                 style.border = 0;
@@ -1185,11 +1217,8 @@ define(function(require, exports, moudle) {
                 that.closeTimer && clearTimeout(that.closeTimer);
                 e = e || event;
                 var oTarget = e.target || e.srcElement;
-                
                 if(jQuery(oTarget).hasClass('submitA')){
-                    if(jQuery(oTarget).hasClass('button-submit')){
-                        
-                    }else{
+                    if(!jQuery(oTarget).hasClass('button-submit')){
                         return true;
                     }
                 }
@@ -1199,7 +1228,7 @@ define(function(require, exports, moudle) {
                 }
                 
                 var preDate = jQuery(that.triggerNode).val();
-                var datepickerInput = that.isCalEnd ? jQuery(that.CalEnd.triggerNode).val() : null;
+                var datepickerInput = that.isCalEnd ? jQuery(that.CalStart.triggerNode).val() : null;
                 switch(oTarget.className) {
                     case "cal-close":
                         that.cancel();
@@ -1242,50 +1271,34 @@ define(function(require, exports, moudle) {
                         break; 
                     case "lastmonth_date"://上月
                         that.setQuickDateInfo(dateCommon.lastmonth_date);
-                        break;                                  
-                    case "prev_1_date": //前1日
-                        that.setQuickDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -1) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -1));  
-                        break;
-                    
-                    case "prev_month_dates": //前1月
-                        that.setQuickDateInfo(_CAL.getPrevMonthDays(datepickerInput.split('至')[0], that.startDate));
+                        break; 
                         
+                    case "prev_1_date": //前1日
+                        that.setQuickDateInfo(that._quickdate.prev_1_date);  
+                        break;
+                    case "prev_month_dates": //前1月
+                        that.setQuickDateInfo(that._quickdate.prev_month_dates);
                         break;
                     case "prev_week_dates": //前1周
-                        that.setQuickDateInfo(_CAL.getPrevWeekDays(datepickerInput.split('至')[0], that.startDate));
+                        that.setQuickDateInfo(that._quickdate.prev_week_dates);
                         break;
                     case "prev_week_date": //上周同期(单天)
-                        that.setQuickDateInfo(_CAL.getDate(datepickerInput.split('至')[0], -8) + '至' + _CAL.getDate(datepickerInput.split('至')[0], -8));  
-                        //that.setDateInfo(_CAL.getDate(preDate.split('至')[0], -7) + '至' + _CAL.getDate(preDate.split('至')[0], -7));  
+                        that.setQuickDateInfo(that._quickdate.prev_week_date);
                         break;
-                    
                     case "prev_month_date": //上月同期(单天)
-                        var oTime =  _CAL.getDateByStringDate(jQuery('#datepickerInput').val().split('至')[0]);
-                        var nowYear = oTime.getYear(); 
-                        nowYear += (nowYear < 2000) ? 1900 : 0;         
-                        nowYear = nowYear;      
-                        var st2 = new Date(nowYear, oTime.getMonth() - 1, oTime.getDate());
-                        st2 = _CAL.formatStrDate(st2);
-                        that.setQuickDateInfo( st2 + '至' + st2); 
+                        that.setQuickDateInfo(that._quickdate.prev_month_date); 
                         break;
-                    
                     case "prev_7_date": //前7日
-                        that.setQuickDateInfo(preDate);  
+                        that.setQuickDateInfo(that._quickdate.prev_7_date);  
                         break;
                     case "prev_30_date": //前30日
-                        that.setQuickDateInfo(preDate);  
+                        that.setQuickDateInfo(that._quickdate.prev_30_date);  
                         break;
-                    
                     case "prev_same_date":
-                        that.setQuickDateInfo(preDate);
+                        that.setQuickDateInfo(that._quickdate.prev_same_date); 
                         break;//向前等长时间
-                    
-                    case "lastmonth_date"://上月
-                        that.setQuickDateInfo(preDate);  
-                        break;
-                
                 }
-                if(oTarget.className){
+                if(oTarget.className && oTarget.tagName.toUpperCase() === "A"){
                     jQuery('#'+this.id+' a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
                     jQuery('#'+this.id+' a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
                 }
@@ -1304,9 +1317,6 @@ define(function(require, exports, moudle) {
             });
             //日历为弹出显示时添加事件
             if(this.isPopup) {
-                if(jQuery('#' + this.id +' .right-select li').length<5){
-                    jQuery('#' + this.id +' .right-select').width(70);
-                }
                 jQuery(this.triggerNode).off('focus');
                 _CAL.on(this.triggerNode, "focus", function(e) {
                     jQuery(".datepicker_container").hide();//关闭其他日期
@@ -1318,6 +1328,12 @@ define(function(require, exports, moudle) {
                     //add kong
                     jQuery('#' + this.id +' div.datepicker_container').hide();
                     that.berfore(that.triggerNode.value);
+                    that.setDateInfo(that.triggerNode.value);
+                    that.html = that.isquickselect ? that._html || that._getrightstr() : '';
+                    jQuery('#' + that.id +" .right_quickButton").html(that.html);
+                    if(jQuery('#' + that.id +' .right-select li').length<5){
+                        jQuery('#' + that.id +' .right-select').width(85);
+                    }
                     that.show();
                     that._setPos();
                     oTarget.select && oTarget.select();
