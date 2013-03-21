@@ -1,7 +1,8 @@
 #kudate
 一个日期组件，直接选定单日期或多日期
-
-##如何使用
+##1、示例
+[示例](http://songyihong.github.com/kudate/)
+##2、如何使用
 var calendar=new  Calendar\(\[config\]\);//实例化日期  
 日期格式规定：
 **YYYY-MM-DD** 或 
@@ -49,7 +50,7 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 *maxDate:* null\},//日历最小日期，最大日期，默认为不限制  
 
 \}  
-###2、自定义事件
+###3、自定义事件
 自定义事件主要灵活用在处理日期时与外部的交互  
 目前支持自定义事件类型：  
 **show**:日期显示事件  
