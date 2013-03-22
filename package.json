@@ -1,0 +1,12 @@
+{
+    "name": "kudate",
+    "root": "kudate",
+    "version": "1.0.0",
+    "description": "hello spm",
+    "spm":{
+        "source":"src",
+        "output":{
+            "datepicker.js":"."
+        }
+    }
+}
