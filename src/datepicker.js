@@ -545,7 +545,7 @@ define(function(require, exports, moudle) {
              * @name Calendar.id
              * @type String
              */
-            this.id = this.isPopup ? "C_" + (+new Date()) : (config.id && config.id.replace(/^#/, "")) || "C_" + (+new Date());
+            this.id = this.isPopup ? "C_" + (+new Date()) : config.id.replace(/^#/, "") || "C_" + (+new Date());
             /**
              * 日历容器
              * @name Calendar.container
@@ -760,6 +760,18 @@ define(function(require, exports, moudle) {
             //添加事件
             this._addEvent();
             this.on("dateClick", this.dateClick);
+            var _this=this;
+//            jQuery("body:not(#div"+this.id+")").click(function(e){
+//                e.stopPropagation();
+//                var target=jQuery(e.target);
+//                var targetid=target.attr("id");
+//                var info=target.attr("info");
+//                info=!info ? target.parent().attr("info") : info;
+//                if( info!='datepicker' && (!config.id || config.id.replace(/^#/, "")!=targetid) ){
+//                    _this.cancel();
+//                    _this.hide();
+//                }
+//            });
         },
         /**
          *获取今天、昨天、本月、上月等一些信息
@@ -913,8 +925,6 @@ define(function(require, exports, moudle) {
             oDiv = document.createElement("div"),
             oMsg = document.createElement("div");
             jQuery(this.triggerNode).addClass("datepickerinput");
-            //显示关闭按钮
-            this.isCloseBtn && aTmp.push("<span class=\"cal-close\">close</span>");
             
             //右边的快捷方式
             aTmp.push("<div class=\"right_quickButton\">" + this.html + "</div>");
@@ -945,6 +955,13 @@ define(function(require, exports, moudle) {
             //if(!this.isPrevBtn && !this.isNextBtn && !this.isCloseBtn) oDiv.style.paddingLeft = oDiv.style.paddingRight = "5px";
             this.container.id = this.id;
             this.container.className = 'datepicker_container';
+            //是否显示关闭\
+            if(this.isCloseBtn){
+                var closeelm= document.createElement("div");
+                closeelm.className='cal-close';
+                closeelm.innerHTML='close';
+                this.container.appendChild(closeelm);
+            }
             this.container.appendChild(oDiv);       
             //jQuery('#' + this.id).addClass('datepicker_container');
             
@@ -1090,7 +1107,7 @@ define(function(require, exports, moudle) {
                             oA.innerHTML = "&nbsp;" 
                         }
                         else {
-                            oA.href         = "javascript:;";
+                            oA.href         = "javascript:void(0);";
                             oA.innerHTML    = sValue;
                             oA["data-date"] = _CAL.formatStrDate(year + "-" + month + "-" + sValue);
                             
@@ -1299,8 +1316,8 @@ define(function(require, exports, moudle) {
                         break;//向前等长时间
                 }
                 if(oTarget.className && oTarget.tagName.toUpperCase() === "A"){
-                    jQuery('#'+this.id+' a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
-                    jQuery('#'+this.id+' a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
+                    jQuery('#'+that.id+' a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
+                    jQuery('#'+that.id+' a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
                 }
                 
                 
@@ -1355,7 +1372,6 @@ define(function(require, exports, moudle) {
                  */
                 
                 _CAL.on(window, "resize", function() {
-                    console.log(1289);
                     that._setPos()  
                 })
             }

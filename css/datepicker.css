@@ -63,6 +63,7 @@ body{font-size:12px;font-family: Arial,"SimSun";}
     width: 220px;
     border: solid 1px #e8e8e8;
     border-bottom: none;
+    display: inline;
 }
 
 .cal-container dt{
@@ -169,15 +170,16 @@ body{font-size:12px;font-family: Arial,"SimSun";}
 }
 .cal-close{
     position: absolute;
-    right: -24px;
-    top:-11px;
+    right: -19px;
+    top:-1px;
     width: 18px;
     height: 18px;
     display: inline-block;
     background: url("../images/cal-icon.gif") no-repeat center -36px #666;
     text-indent: -18em;
-    overflow: hidden;
     cursor: pointer;
+    z-index: 999;
+    overflow: hidden;
 }
 .calendar .bottom_button a,.calendar .bottom_button a:hover{
     line-height: 25px;
