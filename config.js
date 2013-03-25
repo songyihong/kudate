@@ -8,6 +8,10 @@ seajs.config({
             exports: 'jQuery'
         }
     },
+    // 变量配置,src为远吗
+    vars: {
+        'dir': 'dist'
+    },
     //设置路径
     paths:{
        

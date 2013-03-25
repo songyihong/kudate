@@ -2,7 +2,7 @@
     "name": "kudate",
     "root": "kudate",
     "version": "1.0.0",
-    "description": "hello spm",
+    "description": "a javasrcipt date",
     "spm":{
         "source":"src",
         "output":{
