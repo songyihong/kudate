@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>表格相关操作</title>
+        <style type="text/css">
+            body {
+                margin: 0;
+                font-size:12px;
+                font-family: Arial,"Microsoft YaHei","SimSun";
+            }
+            .tool{
+                list-style:none;
+                zoom: 1;
+                padding: 0;
+                margin: 10px;
+            }
+            .tool:after,.tool li:after{
+                visibility:hidden;
+                display:block;
+                font-size:0;
+                content:" ";
+                clear:both;
+                height:0;
+            }
+            .tool li{
+                float: left;
+                display: inline;
+                margin:0 0 0 10px;
+                padding:0;
+                zoom: 1;
+            }
+            .tool label{
+                float: left;
+                display: inline;
+                line-height: 26px;
+                vertical-align: baseline;
+            }
+            .tool span{
+                float: left;
+                display: inline;
+                line-height: 26px;
+                vertical-align: baseline;
+                color: #f00;
+            }
+            .tool input,.tool button{
+                float: left;
+                outline: none;
+                line-height: 14px;
+                padding: 5px;
+                width: 50px;
+                margin: 0;
+                vertical-align: baseline;
+            }
+            .tool button{
+                width: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="" method="post">
+            <ul class="tool">
+                <li>
+                    <label>输入行数：</label>
+                    <input type="text" name="row" id="row"/>
+                    <span id="rowerror"></span>
+                </li>
+                <li>
+                    <label>输入列数：</label>
+                    <input type="text" name="col" id="col"/>
+                    <span id="colerror"></span>
+                </li>
+                <li>
+                    <button id="creattable">生成表格</button>
+                </li>
+            </ul>
+        </form>
+        <script type="text/javascript">
+            <!--
+            (function(d){
+                /**
+                 * 元素选择器
+                 * @param {string} sArg     #id/.clssName/tagName
+                 * @param {object} context  可选，上下文
+                 * @return element 为id时返回元素
+                 * @return elements 为className|tagName时返回元素集
+                 */ 
+                function $(sArg, context) {
+                    switch(sArg.charAt(0)) {
+                        case "#":
+                            return d.getElementById(sArg.substring(1));
+                            break;
+                        case ".":
+                            var reg = new RegExp("(^|\\s)"+ sArg.substring(1) +"(\\s|$)"),
+                            arr = [],
+                            aEl = $("*", context),
+                            i;
+                            for(i = 0; i < aEl.length; i++) reg.test(aEl[i].className) && arr.push(aEl[i]);
+                            return arr;
+                            break;
+                        default:
+                            return (context || d).getElementsByTagName(sArg);
+                            break;
+                    }
+                };
+                /**
+                 * 给目标元素绑定事件
+                 * @param {object} element      目标元素
+                 * @param {string} type         事件类型
+                 * @param {function} handler    处理函数
+                 */ 
+                function on(element, type, handler) {
+                    element.addEventListener ? element.addEventListener(type, handler, false) : element.attachEvent("on" + type, handler)
+                };
+                /**
+                 * 生成表格
+                 * @param {int} row   行数
+                 * @param {int} col   列数
+                 */
+                function creatTable(row,col){
+                    
+                }
+                document.getElementById("row").innerHTML;
+                
+                //检测表单是否为整数
+                on($("#row"),"blur",function(){
+                    var value=$("#row").value;
+                    if(value!='' && !/^\s*[1-9][0-9]*\s*$/i.test(value) ){
+                        $("#rowerror").innerHTML='请输入整数';
+                    }
+                });
+                on($("#col"),"blur",function(){
+                    var value=$("#col").value;
+                    if(value!='' && !/^\s*[1-9][0-9]*\s*$/i.test(value) ){
+                        $("#colerror").innerHTML='请输入整数';
+                    }
+                });
+                //表格聚焦去除错误
+                on($("#row"),"focus",function(){
+                    $("#rowerror").innerHTML='';
+                });
+                on($("#col"),"focus",function(){
+                    $("#colerror").innerHTML='';
+                });
+                //点击生成表单事件
+                on($("#creattable"),'click',function(){
+                   var  rowval=$("#row").value,colval=$("#col").value;
+                   if(!/^\s*[1-9][0-9]*\s*$/i.test(rowval)){
+                       $("#rowerror").innerHTML='请输入整数';
+                   }else if(!/^\s*[1-9][0-9]*\s*$/i.test(colval)){
+                       $("#colerror").innerHTML='请输入整数';
+                   }else{
+                       
+                   }
+                });
+            })(document);
+            //-->
+        </script>
+    </body>
+</html>
