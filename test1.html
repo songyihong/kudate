@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>表格相关操作</title>
+        <style type="text/css">
+            body {
+                margin: 0;
+                font-size:12px;
+                font-family: Arial,"Microsoft YaHei","SimSun";
+            }
+            .tool{
+                list-style:none;
+                zoom: 1;
+                padding: 0;
+                margin: 10px;
+            }
+            .tool:after,.tool li:after{
+                visibility:hidden;
+                display:block;
+                font-size:0;
+                content:" ";
+                clear:both;
+                height:0;
+            }
+            .tool li{
+                float: left;
+                display: inline;
+                margin:0 0 0 10px;
+                padding:0;
+                zoom: 1;
+            }
+            .tool label{
+                float: left;
+                display: inline;
+                line-height: 26px;
+                vertical-align: baseline;
+            }
+            .tool span{
+                float: left;
+                display: inline;
+                line-height: 26px;
+                vertical-align: baseline;
+                color: #f00;
+            }
+            .tool input,.tool button{
+                float: left;
+                outline: none;
+                line-height: 14px;
+                padding: 5px;
+                width: 50px;
+                margin: 0;
+                vertical-align: baseline;
+            }
+            .tool button{
+                width: auto;
+            }
+            table{
+                border-collapse:separate;
+                border-spacing:3px;
+            }
+            td{
+                border: solid 1px #ccc;
+                height: 20px;
+                vertical-align: middle;
+                width: 50px;
+            }
+            .chunk{
+                text-align: center;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                vertical-align: baseline;
+                display: none;
+            }
+            .choose{
+                display: none;
+            }
+            .runtime{
+                font-size: 16px;
+                font-weight: bolder;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="runtime" class="runtime"></div>
+        <ul class="tool">
+            <li>
+                <label>输入行数：</label>
+                <input type="text" name="row" id="row"/>
+                <span id="rowerror"></span>
+            </li>
+            <li>
+                <label>输入列数：</label>
+                <input type="text" name="col" id="col"/>
+                <span id="colerror"></span>
+            </li>
+            <li>
+                <button id="creattable">生成表格</button>
+            </li>
+        </ul>
+        <div id="tablebox">
+        </div>
+        <div id="choose" class="choose">
+            <select id="chooseval">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+        <div class="chunk" id="chunk"></div>
+        <script type="text/javascript">
+            <!--
+            (function(d){
+                var totalcolor=16581374; //总的颜色值
+                var colorarr=new Array();//保存已生成的颜色
+                /**
+                 * 元素选择器
+                 * @param {string} sArg     #id/tagName
+                 * @param {object} context  可选，上下文
+                 * @return element 为id时返回元素
+                 * @return elements 为tagName时返回元素集
+                 */ 
+                function $(sArg, context) {
+                    switch(sArg.charAt(0)) {
+                        case "#":
+                            return d.getElementById(sArg.substring(1));
+                            break;
+                        default:
+                            return (context || d).getElementsByTagName(sArg);
+                            break;
+                    }
+                };
+                /**
+                 * 给目标元素绑定事件
+                 * @param {object} element      目标元素
+                 * @param {string} type         事件类型
+                 * @param {function} handler    处理函数
+                 */ 
+                function on(element, type, handler) {
+                    element.addEventListener ? element.addEventListener(type, handler, false) : element.attachEvent("on" + type, handler)
+                };
+                /**
+                 *某元素是否在数组中
+                 *@param {int} val  要判断元素值
+                 *@param {array} targetarr  目标数组
+                 *@return boolean  存在正返回真    
+                 */
+                function inArray(val,targetarr){
+                    if(!val || !targetarr) return false;
+                    for(var i=0;i<targetarr.length;i++){
+                        if(val==targetarr[i]) return true;
+                    }
+                    return false;
+                }
+                /**
+                 * 生成表格
+                 * @param {int} row   行数
+                 * @param {int} col   列数
+                 * @return string 表格
+                 */
+                function creatTable(row,col){
+                    var str='<table>';
+                    var totaltd=row*col;
+                    colorarr=new Array();
+                    if(!row || !col) return false;
+                    for(var i=0;i<row;i++){
+                        str+='<tr>';
+                        for(var j=0;j<col;j++){
+                            str+='<td style="background:'+randColor(totaltd)+'">';
+                            str+=parseInt(Math.random()*15+1);
+                            str+='</td>';
+                        }
+                        str+='</tr>';
+                    }
+                    str+='</table>';
+                    return str;
+                };
+                /**
+                 * 随机生成不重复颜色
+                 * @param {int} tdnum   总的表格数
+                 * @return string 返回颜色值
+                 */
+                function randColor(tdnum){
+                    var colornum=parseInt(Math.random()*totalcolor);
+                    if(tdnum<totalcolor){//当表格数小于255*255)255   
+                        while(isRepeatcolor(colornum)){
+                            colornum=parseInt(Math.random()*totalcolor);
+                        }
+                    }
+                    var oxcolornum=colornum.toString(16);
+                    var length=oxcolornum.length;
+                    if(length<6){
+                        for(var i=0;i<6-length;i++) oxcolornum='0'+oxcolornum;
+                    }
+                    return "#"+oxcolornum;
+                }
+                /**
+                 * 判断颜色是否重复
+                 * @param {int} colornum   颜色值
+                 * @return boolean 重复则为真
+                 */
+                function isRepeatcolor(colornum){
+                    if( inArray(colornum,colorarr) ) return true;
+                    else{
+                        colorarr.push(colornum);
+                        return false;
+                    }
+                }
+                
+                //检测表单是否为整数
+                on($("#row"),"blur",function(){
+                    var value=$("#row").value;
+                    if(value!='' && !/^\s*[1-9][0-9]*\s*$/i.test(value) ){
+                        $("#rowerror").innerHTML='请输入整数';
+                    }
+                });
+                on($("#col"),"blur",function(){
+                    var value=$("#col").value;
+                    if(value!='' && !/^\s*[1-9][0-9]*\s*$/i.test(value) ){
+                        $("#colerror").innerHTML='请输入整数';
+                    }
+                });
+                //表格聚焦去除错误
+                on($("#row"),"focus",function(){
+                    $("#rowerror").innerHTML='';
+                });
+                on($("#col"),"focus",function(){
+                    $("#colerror").innerHTML='';
+                });
+                //点击生成表单事件
+                on($("#creattable"),'click',function(){
+                    var  rowval=$("#row").value,colval=$("#col").value;
+                    if(!/^\s*[1-9][0-9]*\s*$/i.test(rowval)){
+                        $("#rowerror").innerHTML='请输入整数';
+                    }else if(!/^\s*[1-9][0-9]*\s*$/i.test(colval)){
+                        $("#colerror").innerHTML='请输入整数';
+                    }else{
+                        var starttime,endtime;
+                        starttime=new Date().getTime();
+                        var table=creatTable(rowval-0,colval-0);
+                        $("#tablebox").innerHTML=table;
+                        $("#choose").style.display='block';
+                        //绑定表格点击事件
+                        var td=$("td");
+                        for(var i = 0; i < td.length; i++){
+                            on(td[i],'click',function(e){
+                                var src = window === this ? window.event.srcElement : this;
+                                var num=src.innerHTML;
+                                var bg=src.style.background;
+                                var chunk=$("#chunk");
+                                chunk.style.display='block';
+                                chunk.innerHTML=num;
+                                chunk.style.background=bg;
+                            });
+                        }
+                        endtime=new Date().getTime();
+                        $("#runtime").innerHTML="本次运行"+(endtime-starttime)+"ms";
+                    }
+                });
+                // 根据下拉框选定的值查找有关表格
+                on($("#chooseval"),"change",function (){
+                    var select=$("#chooseval");
+                    var index = select.selectedIndex;
+                    var value = select.options[index].value;
+                    var td=$("td");
+                    for(var i = 0; i < td.length; i++){
+                        if(td[i].innerHTML==value) td[i].style.border="solid 1px #f00";
+                        else td[i].style.border='';
+                    }
+                });
+            })(document);
+            //-->
+        </script>
+    </body>
+</html>
