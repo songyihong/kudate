@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>表格相关操作</title>
+        <title>生成颜色不重复表格</title>
         <style type="text/css">
             body {
                 margin: 0;
@@ -128,23 +128,15 @@
                 var colorstr=',';//保存已生成的颜色
                 /**
                  * 元素选择器
-                 * @param {string} sArg     #id/.clssName/tagName
+                 * @param {string} sArg     #id/tagName
                  * @param {object} context  可选，上下文
                  * @return element 为id时返回元素
-                 * @return elements 为className|tagName时返回元素集
+                 * @return elements 为tagName时返回元素集
                  */ 
                 function $(sArg, context) {
                     switch(sArg.charAt(0)) {
                         case "#":
                             return d.getElementById(sArg.substring(1));
-                            break;
-                        case ".":
-                            var reg = new RegExp("(^|\\s)"+ sArg.substring(1) +"(\\s|$)"),
-                            arr = [],
-                            aEl = $("*", context),
-                            i;
-                            for(i = 0; i < aEl.length; i++) reg.test(aEl[i].className) && arr.push(aEl[i]);
-                            return arr;
                             break;
                         default:
                             return (context || d).getElementsByTagName(sArg);
@@ -252,8 +244,9 @@
                         var td=$("td");
                         for(var i = 0; i < td.length; i++){
                             on(td[i],'click',function(e){
-                                var num=this.innerHTML;
-                                var bg=this.style.background;
+                                var src = window === this ? window.event.srcElement : this;
+                                var num=src.innerHTML;
+                                var bg=src.style.background;
                                 var chunk=$("#chunk");
                                 chunk.style.display='block';
                                 chunk.innerHTML=num;
