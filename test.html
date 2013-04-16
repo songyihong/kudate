@@ -200,7 +200,7 @@
                  * @return boolean 重复则为真
                  */
                 function isRepeatcolor(colornum){
-                    if( colorstr.indexOf(",colornum,")>=0) return true;
+                    if( colorstr.indexOf(","+colornum+",")>=0) return true;
                     else{
                         colorstr+=colornum+',';
                         return false;
