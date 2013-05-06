@@ -5,10 +5,10 @@
 ##2、如何使用
 var calendar=new  Calendar\(\[config\]\);//实例化日期  
 日期格式规定：  
-**YYYY-MM-DD** 或  
+**YYYY-MM-DD** 或
 __YYYY\\MM\\DD__  
 双日期格式：  
-**YYYY-MM-DD到YYYY-MM-DD** 或  
+**YYYY-MM-DD到YYYY-MM-DD** 或
 __YYYY\\MM\\DD到YYYY\\MM\\DD__  
 ###1、config:参数配置
 \{
@@ -34,8 +34,8 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 > **endDate:** null,//日历结束日期，配合上面5个参数实现淘宝旅行网日期选择效果  
 > **count:** 1,//日历的个数，默认为1个  
 > **monthStep:** count,//上下个月的切换步长，默认为count值，即整块切换  
-> **revise:** \{  
-*top:* 0,  
+> **revise:** \{
+*top:* 0,
 *left:* 0\},//日历部件位置微调  
 > **date:** today,//突出渲染的日期，默认为今天  
 > **selectDate:** null,//设置默认选择的日期范围  
@@ -46,8 +46,8 @@ __YYYY\\MM\\DD到YYYY\\MM\\DD__
 > **cancel:** function\(\)\{\},//点击取消时行为  
 > **today:** today,//今天日期，默认为当前日期  
 > **rangeday:** 31,//日历可选择的天数，默认为31天  
-> **range:** \{  
-*minDate:* null,  
+> **range:** \{
+*minDate:* null,
 *maxDate:* null\},//日历最小日期，最大日期，默认为不限制  
 
 \}
