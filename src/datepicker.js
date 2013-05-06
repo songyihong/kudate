@@ -3,11 +3,11 @@
  *该组件依赖于seajs(http://seajs.org)
  */
 define(function(require, exports, moudle) {
-    
+
     var jQuery = require('jquery');
-    
+
     var _dateMap = {};
-    
+
     /**
      * 静态方法集
      * @name _CAL
@@ -17,20 +17,20 @@ define(function(require, exports, moudle) {
         /**
          * 格式化数字，不足两位前面补0
          * @name _CAL#formatNum
-         * @param {number} num 要格式化的数字   
+         * @param {number} num 要格式化的数字
          * @function
          * @return string
-         */ 
+         */
         formatNum: function(num) {
-            return num.toString().replace(/^(\d)$/, "0$1")  
+            return num.toString().replace(/^(\d)$/, "0$1")
         },
         /**
          * 将日期对象/日期字会串格式化为指定日期字符串
          * @name _CAL#formatStrDate
-         * @param {object|string} vArg  可为日期对象或日期字符串，日期对象格式new Date(yyyy, mm, dd)，日期字符串格式yyyy-mm|n-dd|d  
+         * @param {object|string} vArg  可为日期对象或日期字符串，日期对象格式new Date(yyyy, mm, dd)，日期字符串格式yyyy-mm|n-dd|d
          * @function
          * @return string yyyy-mm-dd
-         */         
+         */
         formatStrDate: function(vArg) {
             switch(typeof vArg) {
                 case "string":
@@ -39,19 +39,19 @@ define(function(require, exports, moudle) {
                     break;
                 case "object":
                     return vArg.getFullYear() + "-" + this.formatNum(vArg.getMonth() + 1) + "-" + this.formatNum(vArg.getDate());
-                    break;  
+                    break;
             }
         },
         /**
          * 将日期字符串格式化为数字
          * @name _CAL#formatIntDate
-         * @param {string} sDate    日期字符串，格式yyyy-mm|m-dd|d   
+         * @param {string} sDate    日期字符串，格式yyyy-mm|m-dd|d
          * @function
          * @return number yyyymmdd
-         */ 
+         */
         formatIntDate: function(sDate) {
             return this.formatStrDate(sDate).replace(/-|\//g, "")
-        },  
+        },
         /**
          * 获取指定日期（yyyy-mm-dd）的前1~3天/后1~3天数据，dateName的前三天，后三天
          * @name _CAL#getThreeDays
@@ -59,12 +59,12 @@ define(function(require, exports, moudle) {
          * @param {string} sDate    日期字符串（yyyy-mm-dd）
          * @function
          * @return object
-         */     
+         */
         getThreeDays: function(sDate, dateName) {
             var oTmp  = {},
             aDate = sDate.split(/-|\//g),
             sDate, i;
-            for(i = 0; i < 7; i++) {            
+            for(i = 0; i < 7; i++) {
                 sDate = this.formatStrDate(new Date(aDate[0], aDate[1] - 1, aDate[2] - 0 + (i - 3)));
                 oTmp[sDate] = dateName + (i != 3 ? (i < 3 ? "\u524d" : "\u540e") + Math.abs(i - 3) + "\u5929" : "");
                 i > 2 && (_dateMap[sDate] = dateName + (i != 3 ? (i < 3 ? "\u524d" : "\u540e") + Math.abs(i - 3) + "\u5929" : ""))
@@ -78,7 +78,7 @@ define(function(require, exports, moudle) {
          * @param {object} oData    要添加的对象
          * @function
          * @return object
-         */ 
+         */
         addObject: function(obj, oData) {
             for(var p in oData) obj[p] || (obj[p] = oData[p])
         },
@@ -88,19 +88,19 @@ define(function(require, exports, moudle) {
          * @param {element} element 目标元素
          * @function
          * @return object {left: 元素左端距文档左侧位置, top: 元素左端距文档左侧位置, right: 元素右端距文档左侧位置, bottom: 元素底端距文档上方位置}
-         */ 
+         */
         getPos: function(element) {
             var iScrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             iScrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft,
-            iPos = element.getBoundingClientRect();     
+            iPos = element.getBoundingClientRect();
             return {
-                top: iPos.top + iScrollTop, 
-                left: iPos.left + iScrollLeft - 11, 
-                right: iPos.right + iScrollLeft, 
+                top: iPos.top + iScrollTop,
+                left: iPos.left + iScrollLeft - 11,
+                right: iPos.right + iScrollLeft,
                 bottom: iPos.bottom + iScrollTop
             }
-        
-        },  
+
+        },
         /**
          * 元素选择器
          * @name _CAL#$
@@ -109,7 +109,7 @@ define(function(require, exports, moudle) {
          * @function
          * @return element 为id时返回元素
          * @return elements 为className|tagName时返回元素集
-         */ 
+         */
         $: function(sArg, context) {
             switch(sArg.charAt(0)) {
                 case "#":
@@ -135,7 +135,7 @@ define(function(require, exports, moudle) {
          * @param {object} arr  元素集
          * @function
          * @return number   元素在元素集中的位置，如果没有找到返回-1
-         */ 
+         */
         indexOf: function(vArg, arr) {
             for(var i = arr.length; i--;) {
                 if(typeof vArg === "string" ? this.hasClass(arr[i].children[0] || arr[i], vArg) : vArg == arr[i]) return i
@@ -149,7 +149,7 @@ define(function(require, exports, moudle) {
          * @param {string} className    要检测的className
          * @function
          * @return boolean
-         */ 
+         */
         hasClass: function(element, className) {
             return new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className)
         },
@@ -159,9 +159,9 @@ define(function(require, exports, moudle) {
          * @param {object} element      目标元素
          * @param {string} className    要添加的className
          * @function
-         */ 
+         */
         addClass: function(element, className) {
-            var arr = element.className.split(/\s+/);   
+            var arr = element.className.split(/\s+/);
             this.hasClass(element, className) || arr.push(className);
             element.className = arr.join(" ").replace(/(^\s*)|(\s*$)/, "")
         },
@@ -171,10 +171,10 @@ define(function(require, exports, moudle) {
          * @param {object} element      目标元素
          * @param {string} className    要删除的className
          * @function
-         */ 
+         */
         removeClass: function(element, className) {
-            element.className = element.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)", "g"), "").split(/\s+/).join(" ")    
-        },  
+            element.className = element.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)", "g"), "").split(/\s+/).join(" ")
+        },
         /**
          * 给目标元素绑定事件
          * @name _CAL#on
@@ -182,16 +182,16 @@ define(function(require, exports, moudle) {
          * @param {string} type         事件类型
          * @param {function} handler    处理函数
          * @function
-         */ 
+         */
         on: function(element, type, handler) {
             element.addEventListener ? element.addEventListener(type, handler, false) : element.attachEvent("on" + type, handler)
         },
         /**
          * 阻止事件冒泡和默认事件
          * @name _CAL#halt
-         * @param {event} e  
+         * @param {event} e
          * @function
-         */ 
+         */
         halt: function(e) {
             e = e || event;
             e.preventDefault ? e.preventDefault() : e.returnValue = !1;
@@ -204,10 +204,10 @@ define(function(require, exports, moudle) {
          * @param {element} B
          * @function
          * @return boolean
-         */ 
+         */
         contains: function(A, B) {
             if(A.contains) {
-                return A.contains(B)    
+                return A.contains(B)
             }
             else if(A.compareDocumentPosition) {
                 return !!(A.compareDocumentPosition(B) & 16)
@@ -229,7 +229,7 @@ define(function(require, exports, moudle) {
         /*
          * 根据时间字符串 获得毫秒数
          * @name _CAL#getTimeByStringDate
-         * @param {string} eg:2012-02-12 
+         * @param {string} eg:2012-02-12
          * @function
          * @return int
          */
@@ -241,7 +241,7 @@ define(function(require, exports, moudle) {
         /*
          * 根据时间字符串 获得时间对象
          * @name _CAL#getTimeByStringDate
-         * @param {string} eg:2012-02-12 
+         * @param {string} eg:2012-02-12
          * @function
          * @return int
          */
@@ -257,13 +257,13 @@ define(function(require, exports, moudle) {
                 month = month.slice(1) - 1;
             }else{
                 month = month - 1;
-            }		
-            
+            }
+
             var day = dates[2];
             if(day.length === 1) {
                 day = '0' + day;
             }
-            
+
             return new Date(dates[0], month, day);
         },
         /**
@@ -276,13 +276,13 @@ define(function(require, exports, moudle) {
                 } else if(parseInt(days) < -1) {
                     days = days + 1;
                 }
-                
+
                 var _today = today.split("-"), _todays = new Date(_today[0], _today[1] - 1, _today[2]).getTime(), days = days * 86400000, ends = _todays + days;
                 var end = new Date(ends);
-                
+
                 var _month = end.getMonth() + 1;
                 var _date = end.getDate();
-                
+
                 if(parseInt(_month) < 10) {
                     _month = '0' + _month;
                 }
@@ -293,23 +293,23 @@ define(function(require, exports, moudle) {
             }
             return today;
         },
-        
+
         //根据sDate 来获得相同时间段的时间 , 来设置第二个日历的时间 ，可用在同时向前或向后多少天
         getPrevSameTime : function (sDate, sminDate, smaxDate, returnori ,forward){
             var st = sDate.split('至')[0],  et = sDate.split('至')[1];
-            
+
             //开始到 最小时间的间隔
             var intervals1 = this.getIntervalsByDates(sminDate + '至' + st) - 0;
-            
+
             //结束到 最大时间的间隔
             var intervals2 = this.getIntervalsByDates(et + '至' + smaxDate) - 0;
-            
+
             //获得间隔天数
             var intervals0 = this.getIntervalsByDates(sDate) - 0;
             if(intervals0 === 0){
                 return !returnori ? _CAL.getDate(st, -1) + '至' + _CAL.getDate(st, -1) : null;
             }
-            
+
             if(intervals1 > intervals0){
                 //向前推
                 var _et = _CAL.getDate(st, -1);
@@ -322,12 +322,12 @@ define(function(require, exports, moudle) {
                 return _st + '至' + _et;
             }else{
                 return !returnori ? sDate : null;
-            }        
-        
+            }
+
         },
-        
+
         //获得一段时间间隔的天数
-        getIntervalsByDates : function (sDate) {            
+        getIntervalsByDates : function (sDate) {
             var st = sDate.split('至')[0], et = sDate.split('至')[1];
             if(st === et) {
                 return 0;
@@ -341,11 +341,11 @@ define(function(require, exports, moudle) {
         },
         //获得某月的天数
         getMonthDays : function (sDate){
-            var nowMonth = sDate.getMonth();        
+            var nowMonth = sDate.getMonth();
             var nowYear = sDate.getYear();
-            var nowYear = sDate.getYear(); 
-            nowYear += (nowYear < 2000) ? 1900 : 0;         
-            nowYear = nowYear;      
+            var nowYear = sDate.getYear();
+            nowYear += (nowYear < 2000) ? 1900 : 0;
+            nowYear = nowYear;
             if(nowMonth == 0){
                 nowYear = nowYear - 1;
             }
@@ -368,20 +368,20 @@ define(function(require, exports, moudle) {
                 //当前的月份
                 var month = oDate.getMonth() - 0 + 1;
                 var year = oDate.getFullYear() - 0;
-                
+
                 var newDate = new Date(year, month - 1, 0);
                 var days = newDate.getDate();
                 var start = newDate.getFullYear() + '-' + (newDate.getMonth() - 0 + 1).toString().replace(/^(\d)$/, "0$1") + '-' + '01';
                 var end = newDate.getFullYear() + '-' + (newDate.getMonth() - 0 + 1).toString().replace(/^(\d)$/, "0$1") + '-' + days;
-                
+
                 if(this.getDateByStringDate(start).getTime() < oMinDate.getTime()){
                     start = full ? null : minDate;
                 }
                 if(this.getDateByStringDate(end).getTime() < oMinDate.getTime()){
-                    start = full ? null : minDate;
+                    end = null;
                 }
                 return start && end ? start + '至' + end : null;
-            } 
+            }
         },
         /**
          * 返回前一周
@@ -399,15 +399,15 @@ define(function(require, exports, moudle) {
                 var weekday = oDate.getDay() - 0;
                 var start = this.getDate(sDate, -(7 + weekday));
                 var end = this.getDate(sDate, -(weekday + 1));
-                
+
                 if(this.getDateByStringDate(start).getTime() < oMinDate.getTime()){
                     start = full ? null : minDate;
                 }
                 if(this.getDateByStringDate(end).getTime() < oMinDate.getTime()){
-                    end = full ? null : minDate;
+                    end = null;
                 }
                 return start && end ? start + '至' + end : null;
-            }        	
+            }
         },
         /**
          *比较B日期是否大于等于A日期
@@ -426,7 +426,7 @@ define(function(require, exports, moudle) {
             //结束时间
             var arr1 = b.split("-");
             var endtime = new Date(arr1[0], arr1[1] - 1, arr1[2]).getTime();
-            
+
             if(starttime < endtime) {
                 return true;
             } else if(starttime == endtime){
@@ -436,13 +436,13 @@ define(function(require, exports, moudle) {
             }
         }
     };
-    
+
     /**
      * 日历模板
      * @name _template
      * @type Array
-     * @ignore 
-     */ 
+     * @ignore
+     */
     var _template = [
     "<div class=\"cal-container\">",
     "<dl>",
@@ -463,7 +463,7 @@ define(function(require, exports, moudle) {
      * @name _dateName
      * @type Object
      * @ignore
-     */ 
+     */
     var _dateName = {
         "today":"\u4eca\u5929",
         "yuandan":"\u5143\u65e6",
@@ -481,7 +481,7 @@ define(function(require, exports, moudle) {
      * @name _holidays
      * @type Object
      * @ignore
-     */ 
+     */
     var _holidays = {
         today: [_CAL.formatStrDate(new Date)],
         yuandan: ["2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01"],
@@ -499,7 +499,7 @@ define(function(require, exports, moudle) {
         if(p == "today")  continue;
         for(var i = 0; i < _holidays[p].length; i++) {
             _CAL.addObject(_dateMap, _CAL.getThreeDays(_holidays[p][i], _dateName[p]));
-        }   
+        }
     }
     /**
      * 日历构造函数
@@ -522,7 +522,7 @@ define(function(require, exports, moudle) {
          * 正则表达式：匹配日期字符串2012-01-01——2020-12-31 格式yyyy-mm|m-dd|d
          * @name Calendar.rDate
          * @type ExpReg
-         */ 
+         */
         //rDate: /^20(1[2-9]|20)-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[0-1])$/,
         rDate: /^\d{4}-\d{1,2}-\d{1,2}$/,
         /**
@@ -531,15 +531,15 @@ define(function(require, exports, moudle) {
          * @param {object} config 日历参数配置
          * @function
          * @private
-         */ 
+         */
         _init: function(config) {
-            config = config || {};  
+            config = config || {};
             /**
              * 是否弹出显示日历，默认正常显示日历
              * @name Calendar.isPopup
              * @type Boolean
-             */     
-            this.isPopup = config.isPopup;      
+             */
+            this.isPopup = config.isPopup;
             /**
              * 日历容器ID（如果值为空, 则生成不重复ID）
              * @name Calendar.id
@@ -557,7 +557,7 @@ define(function(require, exports, moudle) {
              * @name Calendar.isSelect
              * @type Boolean
              */
-            this.isSelect = config.isSelect;    
+            this.isSelect = config.isSelect;
             /**
              * 是否显示上月按钮，默认不显示
              * @name Calendar.isPrevBtn
@@ -568,99 +568,103 @@ define(function(require, exports, moudle) {
              * 是否显示上月按钮，默认不显示
              * @name Calendar.isNextBtn
              * @type Boolean
-             */ 
+             */
             this.isNextBtn = config.isNextBtn;
             /**
              * 是否显示关闭按钮，默认不显示
              * @name Calendar.isCloseBtn
              * @type Boolean
-             */ 
+             */
             this.isCloseBtn = config.isCloseBtn;
+            /**
+             *是否简单日历模式，只支持单日历显示,默认否
+             */
+            this.isSimple=config.isSimple;
             /**
              * 是否特殊显示节假日，默认不显示
              * @name Calendar.isHoliday
              * @type Boolean
-             */ 
+             */
             this.isHoliday = config.isHoliday;
             /**
              * 是否提示节假日前1~3天/后1~3天，默认不提示
              * @name Calendar.isHolidayTips
              * @type Boolean
-             */ 
+             */
             this.isHolidayTips = config.isHolidayTips;
             /**
              * 是否设置文本框为只读，默认可写
              * @name Calendar.isReadonly
              * @type Boolean
-             */ 
+             */
             this.isReadonly = config.isReadonly;
             /**
              * 是否显示日期信息，默认不显示
              * @name Calendar.isDateInfo
              * @type Boolean
-             */ 
-            this.isDateInfo = config.isDateInfo;    
+             */
+            this.isDateInfo = config.isDateInfo;
             /**
              * 日期信息className，默认值"date-info"
              * @name Calendar.dateInfoClass
              * @type String
-             */     
-            this.dateInfoClass = config.dateInfoClass || "date-info";       
+             */
+            this.dateInfoClass = config.dateInfoClass || "date-info";
             /**
              * 日历是否包含提示信息，默认不包含提示信息
              * @name Calendar.isMessage
              * @type Boolean
-             */ 
+             */
             this.isMessage = config.isMessage;
             /**
              * 日历提示信息内容，默认值为空
              * @name Calendar.sMessage
              * @type String
-             */     
+             */
             this.sMessage = config.sMessage || "";
             /**
              * 存放出发日期日历实例
              * @name Calendar.CalStart
              * @type Object
-             */ 
+             */
             this.CalStart = config.CalStart || null;
             /**
              * 标记日历实例是否为出发日历
              * @name Calendar.isCalStart
              * @type Boolean
-             */ 
+             */
             this.isCalStart = config.isCalStart;
             /**
              * 存放返程日期日历实例
              * @name Calendar.CalEnd
              * @type Object
-             */ 
+             */
             this.CalEnd = config.CalEnd || null;
             /**
              * 标记日历实例是否为返程日历
              * @name Calendar.isCalEnd
              * @type Boolean
-             */ 
+             */
             this.isCalEnd = config.isCalEnd;
             /**
              * 日历个数,默认1个日历
              * @name Calendar.count
              * @type Number
-             */ 
+             */
             this.count = config.count || 1;
             /**
              * 上下月切换步长，默认与日历个数一致，整区域切换
              * @name Calendar.monthStep
              * @type Number
-             */ 
-            this.monthStep = config.monthStep || this.count;        
+             */
+            this.monthStep = config.monthStep || this.count;
             /**
              * 显示位置微调，在日历原有的位置进行偏移微调(left值, top值)，满足个性化需求
              * @name Calendar.revise
              * @type Object
-             */ 
+             */
             this.revise = {
-                left:0, 
+                left:0,
                 top:0
             };
             /**
@@ -669,47 +673,47 @@ define(function(require, exports, moudle) {
              * @type Object
              */
             this.triggerNode = _CAL.$("#" + config.id.replace(/^#/, ""));
-            
+
             this.idName = config.id.replace(/^#/, "");
             /**
              * 设置日历渲染日期，格式new Date(yyyy, mm, dd)
              * @name Calendar.date
              * @type Object
-             */ 
+             */
             this.date = config.date || new Date;
             /**
              * 日历年份，只读
              * @name Calendar.year
              * @type Number
-             */ 
+             */
             this.year = this.date.getFullYear();
             /**
              * 日历月份，只读
              * @name Calendar.month
              * @type Number
-             */ 
+             */
             this.month = _CAL.formatNum(this.date.getMonth() + 1);
             /**
              * 设置出发日期，格式(yyyy-mm-dd)
              * @name Calendar.startDate
              * @type String
-             */ 
+             */
             this.startDate = config.startDate;
             this._startDate=this.startDate;
             /**
              * 设置返程日期，格式(yyyy-mm-dd)
              * @name Calendar.endDate
              * @type String
-             */ 
-            this.endDate = config.endDate;  
+             */
+            this.endDate = config.endDate;
             this._endDate=this.endDate;
             /**
              * 设置默认选择的日期，增加高亮显示，格式(yyyy, mm, dd)
              * @name Calendar.selectDate
              * @type String
-             */ 
+             */
             this.selectDate = config.selectDate && _CAL.formatStrDate(config.selectDate);
-            
+
             //日历出来前
             this.berfore = config.berfore || function(){};
             //点击提交时
@@ -722,63 +726,56 @@ define(function(require, exports, moudle) {
                 var val=jQuery(this.triggerNode).attr("data-info");
                 this.triggerNode.value=val;
             };
-            
+
             this.today = config.today || _CAL.formatStrDate(new Date());
             _holidays.today[0]=this.today;
             if(!this.triggerNode){
                 return ;
             }
-            
+
             /**
              * 指定日历选定日期范围 minDate:最小日期, maxDate:最大日期。格式new Date(yyyy, mm, dd)
              * @name Calendar.range
              * @type Object
              */
             this.range = config.range || {
-                minDate:null, 
+                minDate:null,
                 maxDate:null
             };
             //日历可自由选择日历天数
             this.rangeday=config.rangeday-0 || 31;
-            
+
             //周几作为一星期的开始，默认周一
             this.weekstart=config.weekstart || 1;
             //保存常用日历信息
             this._quickdate={};
-            this.isquickselect=config.isquickselect || 0; 
+            this.isquickselect=config.isquickselect || 0;
             //右边 的html\
             this._html=config.html || 0;
             this.html = this.isquickselect ? this._html || this._getrightstr() : '';
-            
+
             //鼠标点击次数
             this._clickcount=1;
             //当前选中的日期
             this._clickdate='';
-            
+
             //创建日历
-            this._create();   
+            this._create();
             //添加事件
             this._addEvent();
             this.on("dateClick", this.dateClick);
             var _this=this;
-//            jQuery("body:not(#div"+this.id+")").click(function(e){
-//                e.stopPropagation();
-//                var target=jQuery(e.target);
-//                var targetid=target.attr("id");
-//                var info=target.attr("info");
-//                info=!info ? target.parent().attr("info") : info;
-//                if( info!='datepicker' && (!config.id || config.id.replace(/^#/, "")!=targetid) ){
-//                    _this.cancel();
-//                    _this.hide();
-//                }
-//            });
+            jQuery("#cal-mask").click(function(){
+                _this.cancel();
+                _this.hide();
+            });
         },
         /**
          *获取今天、昨天、本月、上月等一些信息
          */
         _getquickdate:function(){
             var that=this;
-            var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart, false);
+            var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart);
             that._quickdate={};
             if(!that.isCalEnd){
                 that._quickdate.today_date=dateCommon.today_date;
@@ -794,16 +791,16 @@ define(function(require, exports, moudle) {
                 var day=_CAL.getIntervalsByDates(startval);
                 if(day==0){
                     var prev1date=_CAL.getDate(startval.split('至')[0], -1);
-                    var prevweekdate=_CAL.getDate(startval.split('至')[0], -8);//上周同期 
+                    var prevweekdate=_CAL.getDate(startval.split('至')[0], -8);//上周同期
                     that._quickdate.prev_1_date=that.startDate && _CAL.compare_date(prev1date,that.startDate,true) ? null : prev1date + '至' + prev1date;
                     that._quickdate.prev_week_date=that.startDate && _CAL.compare_date(prevweekdate,that.startDate,true) ? null : prevweekdate+'至'+prevweekdate;
                     var oTime =  _CAL.getDateByStringDate(startval.split('至')[0]);
-                    var nowYear = oTime.getYear(); 
-                    nowYear += (nowYear < 2000) ? 1900 : 0;         
-                    nowYear = nowYear;      
+                    var nowYear = oTime.getYear();
+                    nowYear += (nowYear < 2000) ? 1900 : 0;
+                    nowYear = nowYear;
                     var st2 = new Date(nowYear, oTime.getMonth() - 1, oTime.getDate());
                     st2 = _CAL.formatStrDate(st2);//上月同期
-                    that._quickdate.prev_month_date=that.startDate && _CAL.compare_date(st2,that.startDate,true) ? null : st2 + '至' + st2; 
+                    that._quickdate.prev_month_date=that.startDate && _CAL.compare_date(st2,that.startDate,true) ? null : st2 + '至' + st2;
                 }else{
                     switch(that._getdatekey(startval)){
                         case 'last7_date':
@@ -815,19 +812,19 @@ define(function(require, exports, moudle) {
                             that._quickdate.prev_30_date=last30date ? last30date : null;
                             break;
                         case 'week_date':
-                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
+                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate);
                             that._quickdate.prev_week_dates=prevweekdates ? prevweekdates : null;
                             break;
                         case 'lastweek':
-                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate,true);
+                            var prevweekdates=_CAL.getPrevWeekDays(startval.split('至')[0], that.startDate);
                             that._quickdate.prev_week_dates=prevweekdates ? prevweekdates : null;
                             break;
                         case 'month_date':
-                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
+                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate);
                             that._quickdate.prev_month_dates=prevmonthdates ? prevmonthdates : null;
                             break;
                         case 'lastmonth_date':
-                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate,true);
+                            var prevmonthdates=_CAL.getPrevMonthDays(startval.split('至')[0], that.startDate);
                             that._quickdate.prev_month_dates=prevmonthdates ? prevmonthdates : null;
                             break;
                         case 'other':
@@ -855,7 +852,7 @@ define(function(require, exports, moudle) {
                     str+='<li><a href="javascript:" ';
                     str+='class="'+p;
                     if(nowdate==this._quickdate[p]) str+=' cal-selected'
-                    str+='">';
+                    str+='" data-date="'+p+'">';
                     switch(p){
                         case 'today_date':
                             str+='今天';
@@ -925,13 +922,13 @@ define(function(require, exports, moudle) {
             oDiv = document.createElement("div"),
             oMsg = document.createElement("div");
             jQuery(this.triggerNode).addClass("datepickerinput");
-            
+
             //右边的快捷方式
             aTmp.push("<div class=\"right_quickButton\">" + this.html + "</div>");
-            
+
             aTmp.push("<div class=\"cal-outerbox\">");
             aTmp.push("<div class=\"cal-box\">");
-            //显示上月按钮    
+            //显示上月按钮
             this.isPrevBtn  && aTmp.push("<span class=\"cal-prev\">prev</span>");
             //显示下月按钮
             this.isNextBtn  && aTmp.push("<span class=\"cal-next\">next</span>");
@@ -939,7 +936,7 @@ define(function(require, exports, moudle) {
             for(i = this.count; i--;) aTmp = aTmp.concat(_template);
             aTmp.push("</div>");
             aTmp.push("</div>");
-            
+
             //添加 确定 关闭 按钮
             aTmp.push(
                 "<div class=\"bottom_button\">"
@@ -948,7 +945,7 @@ define(function(require, exports, moudle) {
                 +		"<a class=\"button-submit submitA a_0 \">确定</a>"
                 +		"<a class=\"button-close blue12\">关闭</a>"
                 //+	"</p>"
-                +"</div>");   
+                +"</div>");
             //配置日历容器
             oDiv.className = "calendar";
             oDiv.innerHTML = aTmp.join("");
@@ -962,9 +959,9 @@ define(function(require, exports, moudle) {
                 closeelm.innerHTML='close';
                 this.container.appendChild(closeelm);
             }
-            this.container.appendChild(oDiv);       
+            this.container.appendChild(oDiv);
             //jQuery('#' + this.id).addClass('datepicker_container');
-            
+
             //插入信息容器
             if(this.isMessage) {
                 this.oMsg = oMsg;
@@ -973,12 +970,16 @@ define(function(require, exports, moudle) {
                 oMsg.style.display = this.sMessage ? "block" : "none";
                 this.container.insertBefore(oMsg, oDiv);
             }
-            
+
             //修复ie6无法遮盖select的bug
-            !!window.ActiveXObject && !window.XMLHttpRequest && (oIframe = document.createElement("iframe"), this.container.appendChild(oIframe));  
-            
+            !!window.ActiveXObject && !window.XMLHttpRequest && (oIframe = document.createElement("iframe"), this.container.appendChild(oIframe));
+
             //如果页面中没有日历容器则创建一个
             document.getElementById(this.id) || document.body.appendChild(this.container);
+            var mask= document.createElement("div");
+            mask.id="cal-mask";
+            mask.style.display="none";
+            document.getElementById("cal-mask") || document.body.appendChild(mask);
             //如果是ie6, 设置容器内的iframe的宽高
             if(oIframe) {
                 var style = oIframe.style;
@@ -990,20 +991,20 @@ define(function(require, exports, moudle) {
                 style.width = this.container.offsetWidth + "px";
                 style.height = this.container.offsetHeight + "px"
             }
-            
+
             //如果是弹出式日历则先将其隐藏, 并设置绝对定位
             this.isPopup && (this.hide().container.style.position = "absolute");
-            
+
             //初次渲染
             jQuery(this.triggerNode).attr('data-info',this.triggerNode.value)
             this.render();
-            
+
             //触发元素为输入框时的相关设置
             if(this.triggerNode.tagName.toUpperCase() === "INPUT") {
                 //如果设置了只读, 修改触发元素的readonly
                 this.isReadonly && (this.triggerNode.readOnly = true);
                 //如果设置了显示日期信息, 则创建日期信息标签
-                if(this.isDateInfo) {               
+                if(this.isDateInfo) {
                     this.triggerNodeParent                = document.createElement("div");
                     this.oDateInfo                        = document.createElement("span");
                     this.oDateInfo.className              = this.dateInfoClass;
@@ -1014,7 +1015,7 @@ define(function(require, exports, moudle) {
                     this.triggerNodeParent.style.height   = this.triggerNode.offsetHeight + "px";
                     this.triggerNode.parentNode.insertBefore(this.triggerNodeParent, this.triggerNode);
                     this.triggerNodeParent.appendChild(this.triggerNode);
-                    this.triggerNodeParent.appendChild(this.oDateInfo)              
+                    this.triggerNodeParent.appendChild(this.oDateInfo)
                 }
                 //如果输入框有值
                 //this.triggerNode.value != "" && this.isHolidayTips && this.setDateInfo();
@@ -1025,7 +1026,7 @@ define(function(require, exports, moudle) {
          * 画日历
          * @name Calendar#_draw
          * @function
-         * @private      
+         * @private
          */
         _draw: function(oCal, date) {
             var that  = this,
@@ -1033,13 +1034,13 @@ define(function(require, exports, moudle) {
             oDd   = oCal.getElementsByTagName("dd")[0],
             oTmpY = document.createDocumentFragment(),
             oTmpM = document.createDocumentFragment(),
-            oOption, oFrag, oDiv, i;        
+            oOption, oFrag, oDiv, i;
             //select年月
             if(this.isSelect) {
                 oDiv = document.createElement("div");
                 this.selectYear = document.createElement("select");
                 this.selectMonth = document.createElement("select");
-                
+
                 oFrag = document.createDocumentFragment();
                 for(i = (new Date).getFullYear(); i >= 1900; i--) {
                     oOption = document.createElement("option");
@@ -1051,20 +1052,20 @@ define(function(require, exports, moudle) {
                     oOption = document.createElement("option");
                     oOption.value = oOption.innerHTML = i;
                     oOption.selected = this.month == i;
-                    oTmpM.appendChild(oOption)          
+                    oTmpM.appendChild(oOption)
                 }
-                
+
                 this.selectYear.appendChild(oTmpY);
                 this.selectMonth.appendChild(oTmpM);
-                
+
                 oDiv.appendChild(this.selectYear);
                 oDiv.appendChild(this.selectMonth);
                 oDiv.appendChild(document.createTextNode("\u6708"));
                 oDiv.insertBefore(document.createTextNode("\u5e74"), this.selectMonth);
-                
+
                 oDt.innerHTML = "";
                 oDt.appendChild(oDiv);
-                
+
                 this.selectYear.onchange = this.selectMonth.onchange = function() {
                     that.render(new Date(that.selectYear.value, that.selectMonth.value - 1))
                 }
@@ -1081,7 +1082,7 @@ define(function(require, exports, moudle) {
          * 生成日期
          * @name Calendar#_createDays
          * @function
-         * @private      
+         * @private
          */
         _createDays: function(year, month) {
             var iDays     = new Date(year, month, 0).getDate(),
@@ -1090,13 +1091,13 @@ define(function(require, exports, moudle) {
             result    = [],
             oFarg     = document.createDocumentFragment(),
             i, len, sValue, oA, iCur;
-            
+
             for(i = iFirstDay; i--;) arr.push(0);
             for(i = 1; i <= iDays; i++) arr.push(i);
-            
+
             while(arr.length) {
                 for(i = 0, len = arr.length; i < len; i++) {
-                    if(arr.length) {                    
+                    if(arr.length) {
                         oA     = document.createElement("a");
                         $(oA).attr({
                             'info' : 'datepicker'
@@ -1104,32 +1105,32 @@ define(function(require, exports, moudle) {
                         sValue = arr.shift();
                         if(!sValue) {
                             oA.className = "disabled";
-                            oA.innerHTML = "&nbsp;" 
+                            oA.innerHTML = "&nbsp;"
                         }
                         else {
                             oA.href         = "javascript:void(0);";
                             oA.innerHTML    = sValue;
                             oA["data-date"] = _CAL.formatStrDate(year + "-" + month + "-" + sValue);
-                            
+
                             iCur = _CAL.formatIntDate(oA["data-date"]);
-                            
-                            
+
+
                             //可选范围
                             if(this.startDate) {
-                                iCur < (_CAL.formatIntDate(this.startDate)) && (oA.className = "disabled"); 
+                                iCur < (_CAL.formatIntDate(this.startDate)) && (oA.className = "disabled");
                             }
                             if(this.endDate) {
-                                iCur > (_CAL.formatIntDate(this.endDate)) && (oA.className = "disabled");   
+                                iCur > (_CAL.formatIntDate(this.endDate)) && (oA.className = "disabled");
                             }
-                            
+
                             //指定范围
                             /* if(this.range.minDate) {
-                                iCur < (_CAL.formatIntDate(this.range.minDate)) && (oA.className = "disabled"); 
+                                iCur < (_CAL.formatIntDate(this.range.minDate)) && (oA.className = "disabled");
                             }
                             if(this.range.maxDate) {
-                                iCur > (_CAL.formatIntDate(this.range.maxDate)) && (oA.className = "disabled"); 
+                                iCur > (_CAL.formatIntDate(this.range.maxDate)) && (oA.className = "disabled");
                             } */
-                            
+
                             //节假日处理
                             if(this.isHoliday) {
                                 for(var className in _dateName) {
@@ -1138,31 +1139,31 @@ define(function(require, exports, moudle) {
                                 // this._isHoliday(oA)
                                 }
                             }
-                            
+
                             //指定了日期则增加选中状态
                             this.selectDate == oA["data-date"] && ((oA.children[0] || oA).className = "selected");
-                            
+
                             //开始日期
                             this.startDate == oA["data-date"] && ((oA.children[0] || oA).className = "start-date");
-                            
+
                             //开始日期
                             this.endDate == oA["data-date"] && ((oA.children[0] || oA).className = "end-date");
-                            
+
                             //标记选择范围
                             /*
                             if(this.startDate && this.endDate) {
-                                iCur > this.startDate.replace(this.reg, "") && 
-                                iCur < this.endDate.replace(this.reg, "") && 
+                                iCur > this.startDate.replace(this.reg, "") &&
+                                iCur < this.endDate.replace(this.reg, "") &&
                                 ((oA.children[0] || oA).className = "select-range");
                             }
                              */
                             if(this.range.minDate && this.range.maxDate) {
-                                iCur >= _CAL.formatStrDate(this.range.minDate).replace(this.reg, "") && 
-                                iCur <= _CAL.formatStrDate(this.range.maxDate).replace(this.reg, "") && 
+                                iCur >= _CAL.formatStrDate(this.range.minDate).replace(this.reg, "") &&
+                                iCur <= _CAL.formatStrDate(this.range.maxDate).replace(this.reg, "") &&
                                 ((oA.children[0] || oA).className = "select-range");
                             }
-                        
-                        }                   
+
+                        }
                         oFarg.appendChild(oA)
                     }
                 }
@@ -1173,7 +1174,7 @@ define(function(require, exports, moudle) {
          * 计算是否为节假日
          * @name Calendar#_isHoliday
          * @function
-         * @private      
+         * @private
          */
         _isHoliday: function(obj, className) {
             //            if(this.isHolidayTips){
@@ -1197,7 +1198,7 @@ define(function(require, exports, moudle) {
          * 设置弹出式日历位置
          * @name Calendar#_setPos
          * @function
-         * @private      
+         * @private
          */
         _setPos: function() {
             //            var t, l, maxT, ie = /msie\s(\d+\.\d+)/i.test(navigator.userAgent) ? RegExp.$1: undefined;
@@ -1205,7 +1206,7 @@ define(function(require, exports, moudle) {
             //            l = _CAL.getPos(this.triggerNode).left + this.revise.left - (ie < 8 ? 2 : 0);
             //            maxT = t - 211 - this.triggerNode.offsetHeight - this.revise.top * 2;
             //            if(t > document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop) - 211) t = maxT < 0 ? t : maxT;
-            //            
+            //
             //            this.container.style.top  = t + "px";
             //            this.container.style.left = l - 362 + "px"
             var caloffset=jQuery(this.triggerNode).offset();
@@ -1221,13 +1222,13 @@ define(function(require, exports, moudle) {
          * 添加事件
          * @name Calendar#_addEvent
          * @function
-         * @private      
+         * @private
          */
         _addEvent: function() {
             var that = this,
             obj = this.container;
             var dateCommon = new DateCommon(that.today, that.startDate, this.weekstart);
-            
+
             //为日历控件添加CLICK事件监听
             _CAL.on(obj, "click", function(e) {
                 that.isHide = !0;
@@ -1239,11 +1240,11 @@ define(function(require, exports, moudle) {
                         return true;
                     }
                 }
-                
+
                 if(oTarget.className && oTarget.className.indexOf(' ') > 1){
                     oTarget.className = oTarget.className.split(' ')[0];
                 }
-                
+
                 var preDate = jQuery(that.triggerNode).val();
                 var datepickerInput = that.isCalEnd ? jQuery(that.CalStart.triggerNode).val() : null;
                 switch(oTarget.className) {
@@ -1285,13 +1286,13 @@ define(function(require, exports, moudle) {
                         break;
                     case "month_date"://本月
                         that.setQuickDateInfo(dateCommon.month_date);
-                        break; 
+                        break;
                     case "lastmonth_date"://上月
                         that.setQuickDateInfo(dateCommon.lastmonth_date);
-                        break; 
-                        
+                        break;
+
                     case "prev_1_date": //前1日
-                        that.setQuickDateInfo(that._quickdate.prev_1_date);  
+                        that.setQuickDateInfo(that._quickdate.prev_1_date);
                         break;
                     case "prev_month_dates": //前1月
                         that.setQuickDateInfo(that._quickdate.prev_month_dates);
@@ -1303,34 +1304,34 @@ define(function(require, exports, moudle) {
                         that.setQuickDateInfo(that._quickdate.prev_week_date);
                         break;
                     case "prev_month_date": //上月同期(单天)
-                        that.setQuickDateInfo(that._quickdate.prev_month_date); 
+                        that.setQuickDateInfo(that._quickdate.prev_month_date);
                         break;
                     case "prev_7_date": //前7日
-                        that.setQuickDateInfo(that._quickdate.prev_7_date);  
+                        that.setQuickDateInfo(that._quickdate.prev_7_date);
                         break;
                     case "prev_30_date": //前30日
-                        that.setQuickDateInfo(that._quickdate.prev_30_date);  
+                        that.setQuickDateInfo(that._quickdate.prev_30_date);
                         break;
                     case "prev_same_date":
-                        that.setQuickDateInfo(that._quickdate.prev_same_date); 
+                        that.setQuickDateInfo(that._quickdate.prev_same_date);
                         break;//向前等长时间
                 }
                 if(oTarget.className && oTarget.tagName.toUpperCase() === "A"){
                     jQuery('#'+that.id+' a').removeClass('cal-selected').parent().removeClass('calSelected');//移除选中日期
                     jQuery('#'+that.id+' a.' + oTarget.className).addClass('cal-selected').parent().addClass('calSelected');//添加选择样式
                 }
-                
-                
-                oTarget.parentNode.tagName.toUpperCase() === "A" && (oTarget = oTarget.parentNode);         
+
+
+                oTarget.parentNode.tagName.toUpperCase() === "A" && (oTarget = oTarget.parentNode);
                 if(oTarget.tagName.toUpperCase() === "A" && oTarget.className != "disabled" && $(oTarget).attr('info') === 'datepicker') {//点击选中有效的日期
                     that.run("dateClick", oTarget);
-                // if(that.triggerNode.tagName.toUpperCase() === "INPUT") {                 
+                // if(that.triggerNode.tagName.toUpperCase() === "INPUT") {
                 // that.triggerNode.value = oTarget["data-date"];
                 // if(that.isDateInfo) that.setDateInfo(oTarget["data-date"]);
                 //that.hide()
                 // }
                 }
-                that.isPopup && _CAL.contains(obj, oTarget) && _CAL.halt(e)         
+                that.isPopup && _CAL.contains(obj, oTarget) && _CAL.halt(e)
             });
             //日历为弹出显示时添加事件
             if(this.isPopup) {
@@ -1356,31 +1357,31 @@ define(function(require, exports, moudle) {
                     oTarget.select && oTarget.select();
                     oIframe && (oIframe.style.width = that.container.offsetWidth + "px", oIframe.style.height = that.container.offsetHeight + "px");
                 });
-                
+
                 /*
-                _CAL.on(this.triggerNode, "blur", function() {                              
+                _CAL.on(this.triggerNode, "blur", function() {
                     that.closeTimer = setTimeout(function() {
                         that.hide();
                     }, 150)
                 });
-                
-                
+
+
                 _CAL.on(document, "click", function(e) {
                     that.isHide && that.hide()
                 });
-                
+
                  */
-                
+
                 _CAL.on(window, "resize", function() {
-                    that._setPos()  
+                    that._setPos()
                 })
             }
             //给日期信息容器添加事件
             if(this.oDateInfo) {
                 _CAL.on(this.oDateInfo, "click", function(e) {
                     that.focus();
-                    _CAL.halt(e || event)   
-                })  
+                    _CAL.halt(e || event)
+                })
             }
         },
         /**
@@ -1400,19 +1401,19 @@ define(function(require, exports, moudle) {
             this.month = month;
             for(i = 0, len = aCal.length; i < len; i++) {
                 year += (month + (i ? 1 : 0)) > 12 ? 1 : 0;
-                month = (month + (i ? 1 : 0)) % 12 || 12;   
+                month = (month + (i ? 1 : 0)) % 12 || 12;
                 this._draw(aCal[i], {
-                    year: year, 
+                    year: year,
                     month: month
-                }) 
+                })
             }
-        },  
+        },
         /**
          * 渲染下月日历
          * @name Calendar#nextMonth
          * @function
          */
-        nextMonth: function() {     
+        nextMonth: function() {
             // editor kong
             var date = new Date(this.year, this.month + (this.monthStep - 1), 1);
             if((this.endDate && date.getTime() < _CAL.getTimeByStringDate(this.endDate)) || !this.endDate){
@@ -1431,8 +1432,8 @@ define(function(require, exports, moudle) {
             if((this.startDate && date.getTime() > _CAL.getTimeByStringDate(this.startDate)) || !this.startDate){
                 this.render(new Date(this.year, this.month - (this.monthStep + 1), 1));
                 this.run("prevMonthClick");
-            }       
-        
+            }
+
         },
         /**
          * 显示日历
@@ -1440,7 +1441,8 @@ define(function(require, exports, moudle) {
          * @function
          */
         show: function() {
-            this.container.style.display = "block";   
+            this.container.style.display = "block";
+            document.getElementById("cal-mask").style.display="block";
             //console.log(1359);
             this.run("show");
             return this
@@ -1453,17 +1455,18 @@ define(function(require, exports, moudle) {
         hide: function() {
             this.container.style.display = "none";
             this.isMessage && this.hideMessage();
+            document.getElementById("cal-mask").style.display="none";
             this.run("hide");
             return this
         },
         /**
          * 设置显示日期信息
          * @name Calendar#setDateInfo
-         * @param {string} str 日期信息内容    
+         * @param {string} str 日期信息内容
          * @function
          */
         setDateInfo: function(sDate) {
-            /* 
+            /*
             sDate = sDate || this.triggerNode.value;
             this.oDateInfo.innerHTML = this.rDate.test(sDate) ? (this.triggerNode.value = sDate, this.render(sDate), this.getDateInfo(sDate)[this.isHoliday ? "holiday" : "week"]) : ""
              */
@@ -1471,28 +1474,38 @@ define(function(require, exports, moudle) {
                 return ;
             }
             var that = this;
-            var st = sDate.split('至')[0], et = sDate.split('至')[1];
-            if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(st) && /^\d{4}-\d{1,2}-\d{1,2}$/.test(et)){
-                var _st = _CAL.getTimeByStringDate(st), _et = _CAL.getTimeByStringDate(et);
-                if(_et > _st){
-                    this.range.minDate = st;
-                    this.range.maxDate = et;  
-                    this.triggerNode.value = sDate;
-                    this.render(st);
+            if(!this.isSimple){
+                var st = sDate.split('至')[0], et = sDate.split('至')[1];
+                if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(st) && /^\d{4}-\d{1,2}-\d{1,2}$/.test(et)){
+                    var _st = _CAL.getTimeByStringDate(st), _et = _CAL.getTimeByStringDate(et);
+                    if(_et > _st){
+                        this.range.minDate = st;
+                        this.range.maxDate = et;
+                        this.triggerNode.value = sDate;
+                        this.render(st);
+                    }else{
+                        this.range.minDate = et;
+                        this.range.maxDate = st;
+                        this.triggerNode.value = et + '至' + st;
+                        this.render(et);
+                    }
                 }else{
-                    this.range.minDate = et;
-                    this.range.maxDate = st; 
-                    this.triggerNode.value = et + '至' + st;
-                    this.render(et);            
+                    seajs.log('日期格式不正确');
                 }
             }else{
-                seajs.log('日期格式不正确');
+                if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(sDate)){
+                    this.range.minDate = sDate;
+                    this.range.maxDate = sDate;
+                    this.triggerNode.value = sDate;
+                    this.render(sDate);
+                }else{
+                    seajs.log('日期格式不正确');
+                }
             }
-        
         },
         /**
-         *快速设置显示日历
-         */
+     *快速设置显示日历
+     */
         setQuickDateInfo:function(sDate){
             this.startDate=this._startDate;
             this.endDate=this._endDate;
@@ -1500,22 +1513,22 @@ define(function(require, exports, moudle) {
             this.setDateInfo(sDate);
         },
         /**
-         * 获取指定间隔日期
-         * @name Calendar#getDate
-         * @param {string} sDate 日期字符串yyyy-mm-dd或yyyy/mm/dd
-         * @param {number} iDiff 日期差异, 可为负数
-         * @function
-         */     
+     * 获取指定间隔日期
+     * @name Calendar#getDate
+     * @param {string} sDate 日期字符串yyyy-mm-dd或yyyy/mm/dd
+     * @param {number} iDiff 日期差异, 可为负数
+     * @function
+     */
         getDate: function(sDate, iDiff) {
             var aDate = sDate.split(this.reg);
             return _CAL.formatStrDate(new Date(aDate[0], aDate[1] - 1, aDate[2] - 0 + (iDiff || 0)))
         },
         /**
-         * 获取日期信息
-         * @name Calendar#getDateInfo
-         * @param {string} sDate 日期字符串yyyy-mm-dd或yyyy/mm/dd
-         * @function
-         */ 
+     * 获取日期信息
+     * @name Calendar#getDateInfo
+     * @param {string} sDate 日期字符串yyyy-mm-dd或yyyy/mm/dd
+     * @function
+     */
         getDateInfo: function(sDate){
             var that = this,
             aDate = sDate.split(this.reg),
@@ -1537,8 +1550,8 @@ define(function(require, exports, moudle) {
             }
         },
         /*
-         *日期点击事件
-         **/
+     *日期点击事件
+     **/
         dateClick:function(obj){
             // 用户点击右边的时候不触发事件
             if(jQuery(obj).parent().parent().attr('class') === 'right-select') {
@@ -1547,10 +1560,10 @@ define(function(require, exports, moudle) {
             if(jQuery(obj).hasClass('disabled')){
                 return ;
             }
-            
+
             jQuery('#' + this.id +' .cal-selected').removeClass('cal-selected');
-            
-            if(this._clickcount % 2 != 0) {
+
+            if(!this.isSimple && this._clickcount % 2 != 0) {
                 this._clickdate = obj['data-date'];
                 jQuery('#' + this.id+' div.cal-container a').removeClass('select-range').removeClass('end-date').removeClass('start-date');
                 //根据当前选择的日期确定开始日期，跟结束日期
@@ -1562,7 +1575,13 @@ define(function(require, exports, moudle) {
                 else this.endDate=this._endDate;
                 this.setDateInfo(this._clickdate + '\u81f3' + this._clickdate);
                 if(this.isquickselect) this._checkdate(this._clickdate + '\u81f3' + this._clickdate);
-            } else {
+            }else if(this.isSimple){//简单模式
+                this._clickdate = obj['data-date'];
+                jQuery('#' + this.id+' div.cal-container a').removeClass('select-range').removeClass('end-date').removeClass('start-date');
+                this.startDate=this._startDate;
+                this.endDate=this._endDate;
+                this.setDateInfo(this._clickdate);
+            }else{
                 //增加选中样式
                 this.startDate=this._startDate;
                 this.endDate=this._endDate;
@@ -1573,19 +1592,27 @@ define(function(require, exports, moudle) {
         },
         //匹配右边日期值等于str,添加选中样式
         _checkdate:function(str){
+            var st = str.split('至')[0], et = str.split('至')[1];
+            var _st = _CAL.getTimeByStringDate(st), _et = _CAL.getTimeByStringDate(et);
+            if(_et<_st) str=et+'至'+st;
+            //            console.log(this._quickdate);
             for(p in this._quickdate){
+                //                console.log(p);
+                //                console.log(this._quickdate[p]);
+                //                console.log(str);
                 if(this._quickdate[p]==str){
+                    //                    console.log(p);
                     jQuery('#' + this.id +" .cal-selected").removeClass("cal-selected");
                     jQuery('#' + this.id +" ."+p).addClass("cal-selected");
                     break;
                 }
-            }  
+            }
         },
         /**
-         * 显示鼠标移入的日期距开始日期的时间段
-         * @name Calendar#showRange
-         * @function
-         */ 
+     * 显示鼠标移入的日期距开始日期的时间段
+     * @name Calendar#showRange
+     * @function
+     */
         showRange: function() {
             var that = this;
             _CAL.on(this.container, "mouseover", function(e) {
@@ -1610,18 +1637,18 @@ define(function(require, exports, moudle) {
             })
         },
         /**
-         * 弹出式日历时，让触发元素获取焦点
-         * @name Calendar#focus
-         * @function
-         */     
+     * 弹出式日历时，让触发元素获取焦点
+     * @name Calendar#focus
+     * @function
+     */
         focus: function() {
-            this.triggerNode.focus()    
+            this.triggerNode.focus()
         },
         /**
-         * 触发元素为INPUT时的keyup事件
-         * @name Calendar#keyup
-         * @function
-         */
+     * 触发元素为INPUT时的keyup事件
+     * @name Calendar#keyup
+     * @function
+     */
         keyup: function() {
             var that = this,
             Cal_S = that.CalStart,
@@ -1630,44 +1657,44 @@ define(function(require, exports, moudle) {
                 e = e || event;
                 var oTarget = e.target || e.srcElement,
                 sValue = oTarget.value;
-                if(that.rDate.test(sValue)) {               
-                    sValue = _CAL.formatStrDate(sValue);                
+                if(that.rDate.test(sValue)) {
+                    sValue = _CAL.formatStrDate(sValue);
                     if(sValue != (that.isCal_start ? that.startDate : that.endDate)) {
                         if(that.isCalStart) {
                             Cal_S.startDate = Cal_E.startDate = sValue;
                             Cal_S.render(sValue);
-                            that.setDateInfo(that.triggerNode.value);                       
+                            that.setDateInfo(that.triggerNode.value);
                             Cal_E.render(Cal_E.endDate || sValue);
                         }
                         else if(that.isCalEnd) {
                             Cal_S.endDate = Cal_E.endDate = sValue;
-                            Cal_E.render(sValue);           
+                            Cal_E.render(sValue);
                             that.setDateInfo(that.triggerNode.value);
                             Cal_S.render();
                         }
                     }
                 }
-                else {              
+                else {
                     if(that.isCalStart) {
                         Cal_S.startDate = Cal_E.startDate = "";
-                        Cal_S.render(new Date);                 
+                        Cal_S.render(new Date);
                         Cal_E.render(new Date);
                     }
                     else if(that.isCalEnd) {
                         Cal_S.endDate = Cal_E.endDate = "";
-                        Cal_S.render(new Date);                 
-                        Cal_E.render(new Date);                     
+                        Cal_S.render(new Date);
+                        Cal_E.render(new Date);
                     }
                     that.setDateInfo("")
-                }       
-            });     
+                }
+            });
         },
         /**
-         * 显示日历提示信息
-         * @name Calendar#showMessage
-         * @param {string} message 日历提示信息内容  
-         * @function
-         */ 
+     * 显示日历提示信息
+     * @name Calendar#showMessage
+     * @param {string} message 日历提示信息内容
+     * @function
+     */
         showMessage: function(message) {
             if(this.oMsg) {
                 this.oMsg.innerHTML = message;
@@ -1676,100 +1703,100 @@ define(function(require, exports, moudle) {
             }
         },
         /**
-         * 隐藏日历提示信息
-         * @name Calendar#hideMessage
-         * @function
-         */
+     * 隐藏日历提示信息
+     * @name Calendar#hideMessage
+     * @function
+     */
         hideMessage: function() {
             this.oMsg && (this.oMsg.style.display = "none")
         },
         /**
-         * 添加自定义事件
-         * @name Calendar#_addCustomEvent
-         * @param {string} type 事件名
-         * @param {function} handler 事件处理程序
-         * @function
-         * @private
-         */
+     * 添加自定义事件
+     * @name Calendar#_addCustomEvent
+     * @param {string} type 事件名
+     * @param {function} handler 事件处理程序
+     * @function
+     * @private
+     */
         _addCustomEvent: function(type, handler) {
             if(!this._eventQueue) this._eventQueue = {};
             this._eventQueue[type] ? this._eventQueue[type].push(handler) : this._eventQueue[type] = [handler]
         },
         /**
-         * 删除自定义事件
-         * @name Calendar#_delCustomEvent
-         * @param {string} type 事件名
-         * @param {function} handler 事件处理程序  
-         * @function
-         * @private
-         */
+     * 删除自定义事件
+     * @name Calendar#_delCustomEvent
+     * @param {string} type 事件名
+     * @param {function} handler 事件处理程序
+     * @function
+     * @private
+     */
         _delCustomEvent: function(type, handler) {
             var aHandler = this._eventQueue[type];
             if(aHandler) {
                 for(var i = aHandler.length; i--;) {
                     if(aHandler[i] == handler) {
                         aHandler[i] = null;
-                        aHandler.splice(i, 1)   
-                    }   
-                }   
-            }       
+                        aHandler.splice(i, 1)
+                    }
+                }
+            }
         },
         /**
-         * 执行自定义事件
-         * @name Calendar#_fireCustomEvent
-         * @param {string} type 事件名
-         * @function
-         * @private
-         */ 
+     * 执行自定义事件
+     * @name Calendar#_fireCustomEvent
+     * @param {string} type 事件名
+     * @function
+     * @private
+     */
         _fireCustomEvent: function(type) {
             if(this._eventQueue) {
                 var aHandler = this._eventQueue[type];
                 if(aHandler) {
                     for(var i = 0, len = aHandler.length; i < len; i++) {
-                        aHandler[i] && aHandler[i].apply(this, arguments[1] || [])  
-                    }   
+                        aHandler[i] && aHandler[i].apply(this, arguments[1] || [])
+                    }
                 }
             }
         },
         /**
-         * 添加自定义事件<br />
-         * 内置自定义事件如下：<br />
-         * show - 日历显示事件<br />
-         * hide - 日历隐藏事件<br />
-         * dateClick - 日期点击事件<br />
-         * nextMonthClick - 下月按钮点击事件<br />
-         * prevMonthClick - 上月按钮点击事件
-         * @name Calendar#on
-         * @param {string} type 事件名
-         * @param {function} handler 事件处理程序
-         * @function
-         */
+     * 添加自定义事件<br />
+     * 内置自定义事件如下：<br />
+     * show - 日历显示事件<br />
+     * hide - 日历隐藏事件<br />
+     * dateClick - 日期点击事件<br />
+     * nextMonthClick - 下月按钮点击事件<br />
+     * prevMonthClick - 上月按钮点击事件
+     * @name Calendar#on
+     * @param {string} type 事件名
+     * @param {function} handler 事件处理程序
+     * @function
+     */
         on: function(type, handler) {
             this._addCustomEvent(type, handler)
         },
         /**
-         * 删除自定义事件
-         * @name Calendar#un
-         * @param {string} type 事件名
-         * @param {function} handler 事件处理程序  
-         * @function
-         */ 
+     * 删除自定义事件
+     * @name Calendar#un
+     * @param {string} type 事件名
+     * @param {function} handler 事件处理程序
+     * @function
+     */
         un: function(type, handler) {
-            this._delCustomEvent(type, handler) 
+            this._delCustomEvent(type, handler)
         },
         /**
-         * 执行自定义事件
-         * @name Calendar#run
-         * @param {string, ...} type 事件名, ...要传递的若干参数
-         * @function
-         */     
+     * 执行自定义事件
+     * @name Calendar#run
+     * @param {string, ...} type 事件名, ...要传递的若干参数
+     * @function
+     */
         run: function(type) {
             var arg = _CAL.toArray(arguments);
             this._fireCustomEvent(arg.shift(), arg);
             this._setPos();
         }
     };
-    
+
     //today 格式: 2012-02-30
     function DateCommon(today, sminDate){
         var weekstart=arguments[2]!=undefined ? arguments[2] : 1;//每周周一或周日作为第一天，默认每周从周一开始
@@ -1779,31 +1806,30 @@ define(function(require, exports, moudle) {
         this.sToday = today;
         this.sminDate = sminDate;
         var dayInweek= this.oToday.getDay();
-        
+
         if(weekstart === 1){
             if(dayInweek==0) this.getWeekDay=7;
             else this.getWeekDay=dayInweek;
         }else{
             this.getWeekDay = dayInweek + 1;//周日为第一天
         }
-        
+
         //一月中的第几天
         this.getMonthDay = this.oToday.getDate();
-        
-        
+
+
         //今天
         this.today_date = this.sToday + '\u81f3' + this.sToday;
         //昨天
-        
+
         //要是昨天没有，返回今天， 昨天变灰
         var yesterday =  _CAL.getDate(this.sToday, -1);
         if(_CAL.compare_date(this.sminDate, yesterday)){
             this.yesterday_date = yesterday + '\u81f3' + yesterday;
         }else{
-            if(startmindate) this.yesterday_date = this.sminDate + '\u81f3' + this.sminDate;
-            else this.yesterday_date = null;
+            this.yesterday_date = null;
         }
-        
+
         //最近7天
         var last7_date =  _CAL.getDate(this.sToday, -7);
         if(_CAL.compare_date(this.sminDate, last7_date)){
@@ -1812,7 +1838,7 @@ define(function(require, exports, moudle) {
             if(startmindate) this.last7_date = this.sminDate + '\u81f3' + this.sToday;
             else this.last7_date = null;
         }
-        
+
         //最近30天
         var last30_date =  _CAL.getDate(this.sToday, -30);
         if(_CAL.compare_date(this.sminDate, last30_date)){
@@ -1821,8 +1847,8 @@ define(function(require, exports, moudle) {
             if(startmindate) this.last30_date = this.sminDate + '\u81f3' + this.sToday;
             else this.last30_date =null;
         }
-        
-        // 本周       
+
+        // 本周
         //本周周一
         var monday = '';
         if(dayInweek === 0){
@@ -1832,7 +1858,7 @@ define(function(require, exports, moudle) {
         }else{
             monday = _CAL.getDate(this.sToday, - dayInweek);
         }
-        
+
         if(weekstart === 1){//从周一开始
             week_date =  monday;
         }else{//从周日开始
@@ -1844,7 +1870,7 @@ define(function(require, exports, moudle) {
             if(startmindate) this.week_date = this.sminDate + '\u81f3' + this.sToday;
             else  this.week_date =null;
         }
-        
+
         // 本月
         //本月1号
         var month1 = '';
@@ -1853,8 +1879,8 @@ define(function(require, exports, moudle) {
         }else{
             month1 = _CAL.getDate(this.sToday, - this.getMonthDay);
         }
-        
-        
+
+
         //本月日期
         var month_date = month1;
         if(_CAL.compare_date(this.sminDate, month_date)){
@@ -1863,8 +1889,8 @@ define(function(require, exports, moudle) {
             if(startmindate) this.month_date = this.sminDate + '\u81f3' + this.sToday;
             else this.month_date = null;
         }
-        
-        // 上周 
+
+        // 上周
         if(weekstart === 1){//从上周一开始
             day8 = _CAL.getDate(monday, - 8);
             day1 = _CAL.getDate(monday, - 1);
@@ -1872,36 +1898,36 @@ define(function(require, exports, moudle) {
             day8 = _CAL.getDate(monday, - 9);
             day1 = _CAL.getDate(monday, - 3);
         }
-        
+
         if(!_CAL.compare_date(this.sminDate, day8)){
             day8 = startmindate ? this.sminDate : null;
         }
         if(!_CAL.compare_date(this.sminDate, day1)){
-            day1 = startmindate ? this.sminDate : null
+            day1 =  null
         }
-        this.lastweek_date =  (day8 != null && day1 != null) ?  day8 + '\u81f3' + day1 : null;
-        
+        this.lastweek_date =  (day1 != null && day8 != null) ?  day8 + '\u81f3' + day1 : null;
+
         // 上月
         //上月的天数
-        var days =  _CAL.getMonthDays(this.oToday); 
+        var days =  _CAL.getMonthDays(this.oToday);
         var day30 = _CAL.getDate(month1, - days - 1);
         var day301 = _CAL.getDate(month1, - 1);
         if(!_CAL.compare_date(this.sminDate, day30)){
-            day30 = startmindate ? this.sminDate : null;
+            day30 = null;
         }
         if(!_CAL.compare_date(this.sminDate, day301)){
             day301 = startmindate ? this.sminDate : null;
         }
-        this.lastmonth_date = (day30 != null && day301 != null) ? day301 + '\u81f3' + day30 : null;
-        
-        
-        
-        //前x日   
+        this.lastmonth_date = (day30 != null && day301 != null) ? day30 + '\u81f3' + day301 : null;
+
+
+
+        //前x日
         this.prev_date = function(sDate){
-            return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday, startmindate);
+            return _CAL.getPrevSameTime(sDate, this.sminDate, this.sToday, true ,true);
         };
     }
-    
+
     exports._CAL = _CAL;
     exports.Calendar = Calendar;//输出日历对象
     exports.DateCommon = DateCommon;//输出特定的日期

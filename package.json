@@ -8,5 +8,8 @@
         "output":{
             "datepicker.js":"."
         }
+    },
+    "dependencies": {
+        "jquery": "jquery"
     }
 }
